@@ -30,7 +30,7 @@ const Navbar = () => {
             <a href="#contact" className="hover:text-[#FFD700]">
               Contact
             </a>
-            <Link to={"/register"} className="hover:text-[#FFD700]">
+            <Link to={"/login"} className="hover:text-[#FFD700]">
               Login
             </Link>
           </div>
