@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useRegisterMutation } from "../../redux/features/auth/authApi";
+import { toast } from "sonner";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,11 +16,44 @@ const Register = () => {
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm();
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const [registerUser] = useRegisterMutation();
+
+  function isErrorWithStatus(error: unknown): error is { status: number } {
+    return (
+      typeof error === "object" &&
+      error !== null &&
+      "status" in error &&
+      typeof (error as { status: number }).status === "number"
+    );
+  }
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Please wait...");
+    try {
+      console.log(data);
+      const result = await registerUser(data).unwrap();
+      if (result?.success) {
+        toast.success("Registration Successfully..", {
+          id: toastId,
+          duration: 2000,
+        });
+        reset()
+      }
+    } catch (error) {
+      if (isErrorWithStatus(error)) {
+        if (error.status === 400) {
+          toast.error("User Already Exist...", { id: toastId, duration: 2000 });
+        }
+      } else {
+        toast.error("An unexpected error occurred.", { id: toastId, duration: 2000 });
+      }
+    }
   };
+  
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
