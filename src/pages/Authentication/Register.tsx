@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
 
@@ -30,6 +30,8 @@ const Register = () => {
     );
   }
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Please wait...");
     try {
@@ -40,20 +42,22 @@ const Register = () => {
           id: toastId,
           duration: 2000,
         });
-        reset()
+        reset();
+        navigate("/login");
       }
     } catch (error) {
       if (isErrorWithStatus(error)) {
-        if (error.status === 400) {
+        if (error.status === 403) {
           toast.error("User Already Exist...", { id: toastId, duration: 2000 });
         }
       } else {
-        toast.error("An unexpected error occurred.", { id: toastId, duration: 2000 });
+        toast.error("Something Went Wrong.. try few minutes later", {
+          id: toastId,
+          duration: 2000,
+        });
       }
     }
   };
-  
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
@@ -72,7 +76,7 @@ const Register = () => {
                 {...register("name", { required: "Name is required" })}
                 type="text"
                 placeholder="Enter your name..."
-                className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                className={`w-full px-4 py-2  text-white rounded-lg border ${
                   errors.name
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
@@ -96,7 +100,7 @@ const Register = () => {
                 })}
                 type="email"
                 placeholder="Enter your email..."
-                className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                className={`w-full px-4 py-2  text-white rounded-lg border ${
                   errors.email
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
@@ -115,7 +119,7 @@ const Register = () => {
                   })}
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password..."
-                  className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                  className={`w-full px-4 py-2  text-white rounded-lg border ${
                     errors.password
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-700 focus:ring-blue-500"

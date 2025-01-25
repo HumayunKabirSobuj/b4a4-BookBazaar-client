@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../redux/features/auth/authApi";
+import { toast } from "sonner";
+import { verifyToken } from "../../utils/verifyToken";
+import { useAppDispatch } from "../../redux/hooks";
+import { setUser, TUser } from "../../redux/features/auth/authSlice";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,8 +21,35 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const [login] = useLoginMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    // console.log(data);
+    const toastId = toast.loading("Please wait...");
+    try {
+      const result = await login(data).unwrap();
+      console.log("Login : ", result);
+
+      const user = verifyToken(result.data.accessToken) as TUser;
+      console.log("user => ,", user);
+      if (result?.success) {
+        toast.success("Login Successfully..", {
+          id: toastId,
+          duration: 2000,
+        });
+      }
+      dispatch(setUser({ user: user, token: result.data.accessToken }));
+      navigate("/");
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.success("Password Did not match..", {
+        id: toastId,
+        duration: 2000,
+      });
+    }
   };
 
   return (
@@ -43,11 +75,11 @@ const Login = () => {
                 })}
                 type="email"
                 placeholder="Enter your email..."
-                className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                className={`w-full px-4 py-2  text-white rounded-lg border ${
                   errors.email
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                } focus:outline-none focus:ring-2`}
+                } focus:outline-gray-500 focus:ring-2`}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">Email is required</p>
@@ -62,7 +94,7 @@ const Login = () => {
                   })}
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password..."
-                  className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                  className={`w-full px-4 py-2  text-white rounded-lg border ${
                     errors.password
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-700 focus:ring-blue-500"

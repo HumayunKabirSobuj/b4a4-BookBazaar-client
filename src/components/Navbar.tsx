@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { logout, useCurrentUser } from "../redux/features/auth/authSlice";
+import { MdLogout } from "react-icons/md";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -7,6 +10,14 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const user = useAppSelector(useCurrentUser);
+  const dispatch = useAppDispatch()
+  // console.log(user);
+  const handleLogout=()=>{
+    console.log('logout ....');
+    dispatch(logout())
+  }
 
   return (
     <nav className="sticky  bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white  top-0 left-0 w-full z-10">
@@ -17,22 +28,28 @@ const Navbar = () => {
               <span className="text-[#FFD700]">BookBazaar</span>
             </Link>
           </div>
-          <div className="hidden md:flex space-x-8">
-          <Link to={"/"} className="hover:text-[#FFD700]">
+          <div className="hidden md:flex space-x-8 md:items-center">
+            <Link to={"/"} className="text-xl hover:text-[#FFD700]">
               Home
             </Link>
-            <a href="#products" className="hover:text-[#FFD700]">
-              Products
-            </a>
-            <a href="#about" className="hover:text-[#FFD700]">
-              About
-            </a>
-            <a href="#contact" className="hover:text-[#FFD700]">
-              Contact
-            </a>
-            <Link to={"/login"} className="hover:text-[#FFD700]">
-              Login
-            </Link>
+
+            {!user && (
+              <Link to={"/login"} className=" text-xl hover:text-[#FFD700]">
+                Login
+              </Link>
+            )}
+            {user && (
+              <Link to={"/dashboard"} className="text-xl hover:text-[#FFD700]">
+                Dashboard
+              </Link>
+            )}
+            {user && (
+              <div className="text-2xl">
+                <button onClick={()=>handleLogout()}>
+                  <MdLogout />
+                </button>
+              </div>
+            )}
           </div>
           <div className="md:hidden">
             <button onClick={toggleMenu} className="text-2xl">
