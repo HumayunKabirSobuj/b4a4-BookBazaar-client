@@ -10,9 +10,11 @@ const Login = () => {
     setShowPassword((prev) => !prev);
   };
 
-
-
-  const { handleSubmit, register } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log(data);
@@ -27,28 +29,44 @@ const Login = () => {
         </p>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            
             <div>
               <label className="block text-sm font-medium mb-2">
                 Email Address
               </label>
               <input
-                {...register("email")}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email address",
+                  },
+                })}
                 type="email"
-                // name="email"
                 placeholder="Enter your email..."
-                className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                } focus:outline-none focus:ring-2`}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">Email is required</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Password</label>
               <div className="relative">
                 <input
-                  {...register("password")}
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
                   type={showPassword ? "text" : "password"}
-                  // name="password"
                   placeholder="Enter your password..."
-                  className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                    errors.password
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-700 focus:ring-blue-500"
+                  } focus:outline-none focus:ring-2`}
                 />
                 <button
                   type="button"
@@ -62,6 +80,11 @@ const Login = () => {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  Password is required
+                </p>
+              )}
             </div>
           </div>
           <button
@@ -72,7 +95,7 @@ const Login = () => {
           </button>
         </form>
         <p className="text-center text-gray-400 mt-6">
-         New Here?{" "}
+          New Here?{" "}
           <Link to={"/register"} className="text-blue-500 hover:underline">
             Register
           </Link>

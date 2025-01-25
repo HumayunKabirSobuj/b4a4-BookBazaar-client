@@ -10,17 +10,11 @@ const Register = () => {
     setShowPassword((prev) => !prev);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const form = e.target;
-  //   const name = form.name.value;
-  //   const email = form.email.value;
-  //   const password = form.password.value;
-
-  //   console.log({ name, email, password });
-  // };
-
-  const { handleSubmit, register } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log(data);
@@ -40,34 +34,57 @@ const Register = () => {
                 Full Name
               </label>
               <input
-                {...register("name")}
+                {...register("name", { required: "Name is required" })}
                 type="text"
-                // name="name"
                 placeholder="Enter your name..."
-                className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                  errors.name
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                } focus:outline-none focus:ring-2`}
               />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">Name is required</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">
                 Email Address
               </label>
               <input
-                {...register("email")}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email address",
+                  },
+                })}
                 type="email"
-                // name="email"
                 placeholder="Enter your email..."
-                className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                } focus:outline-none focus:ring-2`}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">Email is required</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Password</label>
               <div className="relative">
                 <input
-                  {...register("password")}
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
                   type={showPassword ? "text" : "password"}
-                  // name="password"
                   placeholder="Enter your password..."
-                  className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full px-4 py-2 bg-gray-800 text-white rounded-lg border ${
+                    errors.password
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-700 focus:ring-blue-500"
+                  } focus:outline-none focus:ring-2`}
                 />
                 <button
                   type="button"
@@ -81,6 +98,11 @@ const Register = () => {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  Password is required
+                </p>
+              )}
             </div>
           </div>
           <button
@@ -93,7 +115,7 @@ const Register = () => {
         <p className="text-center text-gray-400 mt-6">
           Already have an account?{" "}
           <Link to={"/login"} className="text-blue-500 hover:underline">
-           Login
+            Login
           </Link>
         </p>
       </div>

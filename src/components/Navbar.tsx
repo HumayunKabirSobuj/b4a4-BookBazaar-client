@@ -18,9 +18,9 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="hidden md:flex space-x-8">
-            <a href="#home" className="hover:text-[#FFD700]">
+          <Link to={"/"} className="hover:text-[#FFD700]">
               Home
-            </a>
+            </Link>
             <a href="#products" className="hover:text-[#FFD700]">
               Products
             </a>
