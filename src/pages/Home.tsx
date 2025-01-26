@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import FAQSection from "../components/HomePageComponents/FAQSection";
 import HowToWorks from "../components/HomePageComponents/HowToWorks";
 import OurService from "../components/HomePageComponents/OurService";
@@ -6,10 +7,11 @@ import WhyChoseBookBazzar from "../components/HomePageComponents/WhyChoseBookBaz
 const Home = () => {
   return (
     <div>
-      <HowToWorks></HowToWorks>
+      <HowToWorks/>
       <WhyChoseBookBazzar />
       <OurService/>
       <FAQSection/>
+      <Footer/>
     </div>
   );
 };
