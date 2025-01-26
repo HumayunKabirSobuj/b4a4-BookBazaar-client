@@ -27,7 +27,7 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     // console.log(data);
-    const toastId = toast.loading("Please wait...");
+    // const toastId = toast.loading("Please wait...");
     try {
       const result = await login(data).unwrap();
       console.log("Login : ", result);
@@ -36,7 +36,7 @@ const Login = () => {
       console.log("user => ,", user);
       if (result?.success) {
         toast.success("Login Successfully..", {
-          id: toastId,
+          // id: toastId,
           duration: 2000,
         });
       }
@@ -45,10 +45,8 @@ const Login = () => {
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.success("Password Did not match..", {
-        id: toastId,
-        duration: 2000,
-      });
+      console.log("error =>", error);
+      toast.error(error.data.message, { duration: 2000 });
     }
   };
 

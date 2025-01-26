@@ -3,6 +3,11 @@ import App from "../App";
 import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
 import Home from "../pages/Home";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import AddProduct from "../pages/ProductManagement/AddProduct";
+import ManageProduct from "../pages/ProductManagement/ManageProduct";
+import ManagingOrders from "../pages/ProductManagement/ManagingOrders";
+import DeactivatingAccounts from "../pages/ProductManagement/DeactivatingAccounts";
 
 const router = createBrowserRouter([
   {
@@ -11,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element:<Home></Home>
+        element: <Home></Home>,
       },
       {
         path: "/login",
@@ -21,6 +26,30 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
       },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element:<Dashboard/>,
+    children: [
+      
+      {
+        path: "admin/add-product",
+        element: <AddProduct />,
+      },
+      {
+        path: "admin/manage-product",
+        element: <ManageProduct />,
+      },
+      {
+        path: "admin/managing-orders",
+        element: <ManagingOrders />,
+      },
+      {
+        path: "admin/deactivating-accounts",
+        element: <DeactivatingAccounts/>,
+      },
+      
     ],
   },
 ]);

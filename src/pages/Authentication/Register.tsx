@@ -21,41 +21,26 @@ const Register = () => {
 
   const [registerUser] = useRegisterMutation();
 
-  function isErrorWithStatus(error: unknown): error is { status: number } {
-    return (
-      typeof error === "object" &&
-      error !== null &&
-      "status" in error &&
-      typeof (error as { status: number }).status === "number"
-    );
-  }
 
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const toastId = toast.loading("Please wait...");
+    // const toastId = toast.loading("Please wait...");
     try {
       console.log(data);
       const result = await registerUser(data).unwrap();
+      console.log("result => ", result);
       if (result?.success) {
         toast.success("Registration Successfully..", {
-          id: toastId,
+          // id: toastId,
           duration: 2000,
         });
         reset();
         navigate("/login");
       }
     } catch (error) {
-      if (isErrorWithStatus(error)) {
-        if (error.status === 403) {
-          toast.error("User Already Exist...", { id: toastId, duration: 2000 });
-        }
-      } else {
-        toast.error("Something Went Wrong.. try few minutes later", {
-          id: toastId,
-          duration: 2000,
-        });
-      }
+      console.log("error =>", error);
+      toast.error(error.data.message, {  duration:2000});
     }
   };
 
