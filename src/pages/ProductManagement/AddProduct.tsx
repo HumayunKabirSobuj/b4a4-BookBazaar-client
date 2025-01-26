@@ -179,7 +179,7 @@ const AddProduct = () => {
               } focus:outline-none focus:ring-2`}
               {...register("category", { required: "Category is required" })}
             >
-              <option value="">--Select a Category--</option>
+              <option  value="" disabled>--Select a Category--</option>
               <option value="fiction">Fiction</option>
               <option value="non-fiction">Non-Fiction</option>
               <option value="academic">Academic & Education</option>
