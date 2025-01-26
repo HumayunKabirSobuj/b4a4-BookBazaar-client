@@ -9,7 +9,12 @@ const productApi = baseApi.injectEndpoints({
         body: bookInfo,
       }),
     }),
+    getAllBookData: builder.query({
+      query: () => ({
+        url: "/api/product",
+      }),
+    }),
   }),
 });
 
-export const { useAddBookMutation } = productApi;
+export const { useAddBookMutation, useGetAllBookDataQuery } = productApi;

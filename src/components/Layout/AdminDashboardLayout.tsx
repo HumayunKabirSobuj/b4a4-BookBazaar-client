@@ -107,8 +107,6 @@ const AdminDashboardLayout: React.FC = () => {
       break;
   }
 
-  console.log(user);
-
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -117,6 +115,7 @@ const AdminDashboardLayout: React.FC = () => {
   return (
     <Layout style={{ height: "100%" }}>
       <Sider
+        
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -124,6 +123,7 @@ const AdminDashboardLayout: React.FC = () => {
       >
         <div className="demo-logo-vertical" />
         <Menu
+        
           theme="dark"
           mode="inline"
           defaultSelectedKeys={["1"]}
@@ -133,7 +133,7 @@ const AdminDashboardLayout: React.FC = () => {
       <Layout>
         <Header
           style={{ padding: 0, position: "sticky", top: 0, zIndex: 1000 }}
-          className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]"
+          className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] min-w-f"
         >
           <Button
             type="text"

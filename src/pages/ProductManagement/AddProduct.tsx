@@ -20,6 +20,7 @@ const AddProduct = () => {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm<BookFormData>();
 
@@ -69,6 +70,8 @@ const AddProduct = () => {
       if (finalResult.success) {
         toast.success("Book Data Added Successfully", { duration: 2000 });
       }
+
+      reset()
 
       setLoading(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

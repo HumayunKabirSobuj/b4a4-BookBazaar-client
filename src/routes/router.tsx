@@ -7,7 +7,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import AddProduct from "../pages/ProductManagement/AddProduct";
 import ManageProduct from "../pages/ProductManagement/ManageProduct";
 import ManagingOrders from "../pages/ProductManagement/ManagingOrders";
-import DeactivatingAccounts from "../pages/ProductManagement/DeactivatingAccounts";
+import DeactivatingAccounts from "../pages/UserManagement/DeactivatingAccounts";
 
 const router = createBrowserRouter([
   {
