@@ -3,7 +3,9 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAppSelector } from "../../redux/hooks";
 import { useCurrentUser } from "../../redux/features/auth/authSlice";
-import { RingLoader,  } from "react-spinners";
+import { RingLoader } from "react-spinners";
+import { useAddBookMutation } from "../../redux/features/productManagement/productApi";
+import { toast } from "sonner";
 
 interface BookFormData {
   title: string;
@@ -11,7 +13,7 @@ interface BookFormData {
   description: string;
   image: FileList;
   price: string;
-  category:string
+  category: string;
 }
 
 const AddProduct = () => {
@@ -23,23 +25,7 @@ const AddProduct = () => {
 
   const user = useAppSelector(useCurrentUser);
 
-  // const onSubmit: SubmitHandler<BookFormData> = async (data) => {
-  //   console.log("Add Product ", data);
-  //   // console.log("Image ", );
-
-  //   const image = data.image[0];
-  //   const newFormData = new FormData();
-  //   newFormData.append("file", image);
-  //   newFormData.append("upload_preset", "humayunkabir");
-  //   newFormData.append("cloud_name", "dn7oeugls");
-
-  //   const imageLink = await axios.post(
-  //     "https://api.cloudinary.com/v1_1/dn7oeugls/image/upload",
-  //     image
-  //   );
-
-  //   console.log('Image link', imageLink);
-  // };
+  const [addBook] = useAddBookMutation();
 
   const [loading, setLoading] = useState(false);
   const onSubmit: SubmitHandler<BookFormData> = async (data) => {
@@ -62,7 +48,7 @@ const AddProduct = () => {
       );
 
       const imageUrl = response.data.url;
-      const { description, numberOfBooks, price, title ,category} = data;
+      const { description, numberOfBooks, price, title, category } = data;
       const bookData = {
         description,
         numberOfBooks,
@@ -72,14 +58,22 @@ const AddProduct = () => {
         authorName: user?.name,
         authorEmail: user?.email,
         isAvaillable: true,
-        category
+        category,
       };
 
-      console.log("Book data,", bookData);
+      // console.log("Book data,", bookData);
+
+      const finalResult = await addBook(bookData).unwrap();
+      console.log("Final result, ", finalResult);
+
+      if (finalResult.success) {
+        toast.success("Book Data Added Successfully", { duration: 2000 });
+      }
 
       setLoading(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Error uploading image:", error);
+      toast.error("something went wrong..", { duration: 2000 });
     }
   };
 
@@ -92,7 +86,6 @@ const AddProduct = () => {
   }
 
   return (
-    
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
       <div className="max-w-4xl w-full text-white rounded-lg shadow-lg p-8 md:p-12 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
         <h1 className="text-3xl font-bold text-center mb-6">Add a Book</h1>
@@ -172,14 +165,17 @@ const AddProduct = () => {
             </label>
             <select
               id="bookCategory"
-              className={`w-full px-4 py-2 text-gray-700  rounded-lg border ${
+              className={`w-full px-4 py-2 text-gray-700 rounded-lg border ${
                 errors.category
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
               } focus:outline-none focus:ring-2`}
               {...register("category", { required: "Category is required" })}
+              defaultValue="" // Use defaultValue for the default selection
             >
-              <option  value="" disabled>--Select a Category--</option>
+              <option value="" disabled>
+                --Select a Category--
+              </option>
               <option value="fiction">Fiction</option>
               <option value="non-fiction">Non-Fiction</option>
               <option value="academic">Academic & Education</option>
