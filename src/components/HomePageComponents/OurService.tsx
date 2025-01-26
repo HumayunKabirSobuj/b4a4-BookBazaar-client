@@ -1,10 +1,7 @@
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// import "swiper/css";
 
-// import "swiper/css/pagination";
-// import 'swiper/swiper-bundle.min.css';
 import { Pagination } from "swiper/modules";
 
 // Import Card Images
