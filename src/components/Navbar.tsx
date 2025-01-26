@@ -172,7 +172,7 @@ const Navbar = () => {
                       <li>
                         {user && (
                           <Link
-                            to="/dashboard"
+                            to={`/${user.role}/dashboard`}
                             className="block w-full text-left px-4 py-2 hover:bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] "
                           >
                             Dashboard

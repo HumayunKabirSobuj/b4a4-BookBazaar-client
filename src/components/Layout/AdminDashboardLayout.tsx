@@ -19,7 +19,7 @@ const userRole = {
   ADMIN: "admin",
   USER: "user",
 };
-const DashboardLayout: React.FC = () => {
+const AdminDashboardLayout: React.FC = () => {
   const user = useAppSelector(useCurrentUser);
   let sidebarItems;
 
@@ -48,7 +48,7 @@ const DashboardLayout: React.FC = () => {
         {
           key: "AdminDashboard",
           icon: <MdDashboard />,
-          label: <NavLink to={"/dashboard"}>Dashboard</NavLink>,
+          label: <NavLink to={"/admin/dashboard"}>Dashboard</NavLink>,
         },
         {
           key: "ProductManagement",
@@ -59,7 +59,7 @@ const DashboardLayout: React.FC = () => {
               key: "AddProduct",
               icon: <MdAddChart />,
               label: (
-                <NavLink to={"/dashboard/admin/add-product"}>
+                <NavLink to={"/admin/dashboard/add-product"}>
                   Add Product
                 </NavLink>
               ),
@@ -68,8 +68,8 @@ const DashboardLayout: React.FC = () => {
               key: "ManageProduct",
               icon: <SiManageiq />,
               label: (
-                <NavLink to={"/dashboard/admin/manage-product"}>
-                  Add Product
+                <NavLink to={"/admin/dashboard/manage-product"}>
+                  Manage Product
                 </NavLink>
               ),
             },
@@ -77,7 +77,7 @@ const DashboardLayout: React.FC = () => {
               key: "ManagingOrders",
               icon: <FaJediOrder />,
               label: (
-                <NavLink to={"/dashboard/admin/managing-orders"}>
+                <NavLink to={"/admin/dashboard/managing-orders"}>
                   Managing Orders
                 </NavLink>
               ),
@@ -92,7 +92,11 @@ const DashboardLayout: React.FC = () => {
             {
               key: "DeactivatingAccounts",
               icon: <GiSplitCross />,
-              label: <NavLink to={"/dashboard/admin/deactivating-accounts"}>Deactivating Accounts</NavLink>
+              label: (
+                <NavLink to={"/admin/dashboard/deactivating-accounts"}>
+                  Deactivating Accounts
+                </NavLink>
+              ),
             },
           ],
         },
@@ -127,7 +131,10 @@ const DashboardLayout: React.FC = () => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          style={{ padding: 0, position: "sticky", top: 0, zIndex: 1000 }}
+          className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]"
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -136,13 +143,14 @@ const DashboardLayout: React.FC = () => {
               fontSize: "16px",
               width: 64,
               height: 64,
+              color: "white",
             }}
           />
         </Header>
         <Content
           style={{
-            margin: "24px 16px",
-            padding: 24,
+            // margin: "24px 16px",
+            // padding: 24,
             minHeight: 280,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
@@ -155,4 +163,4 @@ const DashboardLayout: React.FC = () => {
   );
 };
 
-export default DashboardLayout;
+export default AdminDashboardLayout;

@@ -1,4 +1,4 @@
-import DashboardLayout from "../../components/Layout/DashboardLayout"
+import DashboardLayout from "../../components/Layout/AdminDashboardLayout.tsx"
 
 const Dashboard = () => {
   return (

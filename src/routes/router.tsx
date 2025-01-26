@@ -29,24 +29,23 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
+    path: "/admin/dashboard",
     element:<Dashboard/>,
     children: [
-      
       {
-        path: "admin/add-product",
+        path: "add-product",
         element: <AddProduct />,
       },
       {
-        path: "admin/manage-product",
+        path: "manage-product",
         element: <ManageProduct />,
       },
       {
-        path: "admin/managing-orders",
+        path: "managing-orders",
         element: <ManagingOrders />,
       },
       {
-        path: "admin/deactivating-accounts",
+        path: "deactivating-accounts",
         element: <DeactivatingAccounts/>,
       },
       
