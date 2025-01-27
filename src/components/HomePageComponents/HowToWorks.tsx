@@ -51,7 +51,7 @@ const HowToWorks = () => {
   };
 
   return (
-    <div className="lg:mt-24 mt-10 text-white">
+    <div className="lg:mt-8 mt-8 text-white">
       <div className="text-center lg:mb-14 mb-8">
         <h2 className="lg:text-6xl text-3xl font-semibold text-white">
           How To Works?

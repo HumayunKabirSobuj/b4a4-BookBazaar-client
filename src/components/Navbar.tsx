@@ -143,6 +143,9 @@ const Navbar = () => {
             <Link to="/" className="text-xl hover:text-[#FFD700]">
               Home
             </Link>
+            <Link to="/all-product" className="text-xl hover:text-[#FFD700]">
+              All Products
+            </Link>
             {!user && (
               <Link to="/login" className="text-xl hover:text-[#FFD700]">
                 Login
@@ -212,6 +215,9 @@ const Navbar = () => {
         <div className="md:hidden bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] space-y-4 py-4 px-6">
           <Link to="/" className="block text-lg hover:text-[#FFD700]">
             Home
+          </Link>
+          <Link to="/all-product" className="block text-lg hover:text-[#FFD700]">
+            All Products
           </Link>
           {!user && (
             <Link to="/login" className="block text-lg hover:text-[#FFD700]">

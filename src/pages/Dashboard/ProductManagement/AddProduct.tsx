@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAppSelector } from "../../redux/hooks";
-import { useCurrentUser } from "../../redux/features/auth/authSlice";
+import { useAppSelector } from "../../../redux/hooks";
+import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 import { RingLoader } from "react-spinners";
-import { useAddBookMutation } from "../../redux/features/productManagement/productApi";
+import { useAddBookMutation } from "../../../redux/features/productManagement/productApi";
 import { toast } from "sonner";
 
 interface BookFormData {
@@ -180,7 +180,6 @@ const AddProduct = () => {
                 --Select a Category--
               </option>
               <option value="fiction">Fiction</option>
-              <option value="non-fiction">Non-Fiction</option>
               <option value="academic">Academic & Education</option>
               <option value="children">Children's Books</option>
             </select>

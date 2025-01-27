@@ -4,10 +4,12 @@ import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
 import Home from "../pages/Home";
 import Dashboard from "../pages/Dashboard/Dashboard";
-import AddProduct from "../pages/ProductManagement/AddProduct";
-import ManageProduct from "../pages/ProductManagement/ManageProduct";
-import ManagingOrders from "../pages/ProductManagement/ManagingOrders";
+import AddProduct from "../pages/Dashboard/ProductManagement/AddProduct";
+import ManageProduct from "../pages/Dashboard/ProductManagement/ManageProduct";
+import ManagingOrders from "../pages/Dashboard/ProductManagement/ManagingOrders";
 import DeactivatingAccounts from "../pages/UserManagement/DeactivatingAccounts";
+import AllProducts from "../pages/AllProducts";
+import ProductDetails from "../pages/ProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home></Home>,
+      },
+      {
+        path: "/all-product",
+        element: <AllProducts />,
+      },
+      {
+        path: "/product-details/:id",
+        element: <ProductDetails />,
       },
       {
         path: "/login",
@@ -30,7 +40,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/dashboard",
-    element:<Dashboard/>,
+    element: <Dashboard />,
     children: [
       {
         path: "add-product",
@@ -46,9 +56,8 @@ const router = createBrowserRouter([
       },
       {
         path: "deactivating-accounts",
-        element: <DeactivatingAccounts/>,
+        element: <DeactivatingAccounts />,
       },
-      
     ],
   },
 ]);

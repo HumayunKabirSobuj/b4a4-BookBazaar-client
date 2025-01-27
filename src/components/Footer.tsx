@@ -85,19 +85,19 @@ const Footer = () => {
                   <li className="mb-1 flex gap-2">
                     <img src={mail} alt="" />
                     <a
-                      href="mailto:official@metrosolver.com"
+                      href="official@bookbazzar.com"
                       className="hover:text-yellow-500"
                     >
-                      official@metrosolver.com
+                      official@bookbazzar.com
                     </a>
                   </li>
                   <li className="flex gap-2">
                     <img src={mail} alt="" />
                     <a
-                      href="mailto:hello@metrosolver.com"
+                      href="hello@bookbazzar.com"
                       className="hover:text-yellow-500"
                     >
-                      hello@metrosolver.com
+                      hello@bookbazzar.com
                     </a>
                   </li>
                 </ul>
@@ -110,10 +110,10 @@ const Footer = () => {
                 <p className="flex gap-2">
                   <img src={mail} alt="" />
                   <a
-                    href="mailto:info@metrosolver.com"
+                    href="info@bookbazzar.com"
                     className="hover:text-yellow-500"
                   >
-                    info@metrosolver.com
+                    info@bookbazzar.com
                   </a>
                 </p>
               </div>
@@ -128,10 +128,10 @@ const Footer = () => {
             <p className="flex gap-2">
               <img src={mail} alt="" />
               <a
-                href="mailto:career@metrosolver.com"
+                href="carrear@bookbazzar.com"
                 className="hover:text-yellow-500"
               >
-                career@metrosolver.com
+                carrear@bookbazzar.com
               </a>
             </p>
           </div>{" "}
@@ -142,19 +142,19 @@ const Footer = () => {
                 <li className="mb-1 flex gap-2">
                   <img src={mail} alt="" />
                   <a
-                    href="mailto:akarim@metrosolver.com"
+                    href="director@bookbazzar.com"
                     className="hover:text-yellow-500"
                   >
-                    akarim@metrosolver.com
+                    director@bookbazzar.com
                   </a>
                 </li>
                 <li className="flex gap-2">
                   <img src={mail} alt="" />
                   <a
-                    href="mailto:nkarim@metrosolver.com"
+                    href="director@bookbazzar.com"
                     className="hover:text-yellow-500"
                   >
-                    nkarim@metrosolver.com
+                    director@bookbazzar.com
                   </a>
                 </li>
               </ul>
@@ -167,10 +167,10 @@ const Footer = () => {
               <p className="flex gap-2">
                 <img src={mail} alt="" />
                 <a
-                  href="mailto:white@metrosolver.com"
+                  href="service@bookbazzar.com"
                   className="hover:text-yellow-500"
                 >
-                  white@metrosolver.com
+                  service@bookbazzar.com
                 </a>
               </p>
             </div>
@@ -182,10 +182,10 @@ const Footer = () => {
               <p className="flex gap-2">
                 <img src={mail} alt="" />
                 <a
-                  href="mailto:service@metrosolver.com"
+                  href="service@bookbazzar.com"
                   className="hover:text-yellow-500"
                 >
-                  service@metrosolver.com
+                  service@bookbazzar.com
                 </a>
               </p>
             </div>

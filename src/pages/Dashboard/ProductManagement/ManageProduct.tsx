@@ -1,10 +1,9 @@
 import { RingLoader } from "react-spinners";
-import { useGetAllBookDataQuery } from "../../redux/features/productManagement/productApi";
-import { useAppSelector } from "../../redux/hooks";
-import { useCurrentUser } from "../../redux/features/auth/authSlice";
+import { useGetAllBookDataQuery } from "../../../redux/features/productManagement/productApi";
+import { useAppSelector } from "../../../redux/hooks";
+import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 type TBook = {
   authorEmail: string;
@@ -77,9 +76,9 @@ const ManageProduct = () => {
                   <tr key={item._id} className="border-b border-opacity-20 ">
                     <td className="p-3">
                       <div className="flex items-center justify-start">
-                        <div className="w-14 h-14  overflow-hidden border border-gray-300">
+                        <div className="w-14 h-14  overflow-hidden ">
                           <img
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover rounded-full"
                             src={item?.imageUrl}
                           />
                         </div>
