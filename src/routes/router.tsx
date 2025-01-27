@@ -8,8 +8,10 @@ import AddProduct from "../pages/Dashboard/ProductManagement/AddProduct";
 import ManageProduct from "../pages/Dashboard/ProductManagement/ManageProduct";
 import ManagingOrders from "../pages/Dashboard/ProductManagement/ManagingOrders";
 import DeactivatingAccounts from "../pages/UserManagement/DeactivatingAccounts";
-import AllProducts from "../pages/AllProducts";
+import AllProducts from "../pages/Dashboard/ProductManagement/AllProducts";
 import ProductDetails from "../pages/ProductDetails";
+import PaymentSuccessful from "../pages/Payment/PaymentSuccessful";
+import PaymentFailed from "../pages/Payment/PaymentFailed";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
       {
         path: "/product-details/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "/payment-successful/:transectionId",
+        element: <PaymentSuccessful />,
+      },
+      {
+        path: "/payment-failed/:transectionId",
+        element: <PaymentFailed />,
       },
       {
         path: "/login",

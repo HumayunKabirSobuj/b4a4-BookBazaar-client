@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi";
+import { useGetAllBookDataQuery } from "../../../redux/features/productManagement/productApi";
 import { Link } from "react-router-dom";
 import { RingLoader } from "react-spinners";
 type TBook = {

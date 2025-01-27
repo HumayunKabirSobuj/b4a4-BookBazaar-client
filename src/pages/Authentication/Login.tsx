@@ -8,6 +8,7 @@ import { verifyToken } from "../../utils/verifyToken";
 import { useAppDispatch } from "../../redux/hooks";
 import { setUser, TUser } from "../../redux/features/auth/authSlice";
 
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,8 +44,8 @@ const Login = () => {
       dispatch(setUser({ user: user, token: result.data.accessToken }));
       navigate("/");
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
       console.log("error =>", error);
       toast.error(error.data.message, { duration: 2000 });
     }

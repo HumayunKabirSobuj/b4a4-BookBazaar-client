@@ -38,7 +38,8 @@ const Register = () => {
         reset();
         navigate("/login");
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
       console.log("error =>", error);
       toast.error(error.data.message, {  duration:2000});
     }

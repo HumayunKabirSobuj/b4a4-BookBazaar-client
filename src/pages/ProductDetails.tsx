@@ -4,6 +4,7 @@ import { RingLoader } from "react-spinners";
 import { useAppSelector } from "../redux/hooks";
 import { useCurrentUser } from "../redux/features/auth/authSlice";
 import { toast } from "sonner";
+import { useAddOrderMutation } from "../redux/features/OrderManagement/orderApi";
 type TBook = {
   authorEmail: string;
   authorName: string;
@@ -21,6 +22,7 @@ type TBook = {
 const ProductDetails = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetAllBookDataQuery(undefined);
+  const [addOrder] = useAddOrderMutation();
   //   console.log(id);
 
   //   console.log(data.data);
@@ -36,11 +38,23 @@ const ProductDetails = () => {
     );
   }
 
-  const handleProceedToBuy = (id: string) => {
-    console.log(id);
+  const handleProceedToBuy = async (id: string) => {
+    // console.log(id);
     if (user?.email === bookData?.authorEmail) {
       return toast.error("You cannot buy your own product");
     }
+
+    const productInfo = {
+      productId: id,
+      userInfo: {
+        ...user,
+      },
+    };
+
+    const result = await addOrder(productInfo).unwrap();
+
+    // console.log(result);
+    window.location.replace(result.url);
   };
   return (
     <div>
@@ -62,10 +76,14 @@ const ProductDetails = () => {
             <h2 className="text-lg text-blue-400 mb-2">
               By {bookData?.authorName}
             </h2>
-            <p className="text-gray-300 mb-4">{bookData?.description}</p>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-300 mb-2">{bookData?.description}</p>
+            <p className="text-gray-400 mb-2">
               <span className="font-semibold">Category : </span>{" "}
               {bookData?.category}
+            </p>
+            <p className="text-gray-400 mb-6">
+              <span className="font-semibold">Number Of Books : </span>{" "}
+              {bookData?.numberOfBooks}
             </p>
 
             {/* Price and Action */}
