@@ -1,21 +1,25 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { logout, useCurrentUser } from "../../redux/features/auth/authSlice";
 import { useGetAdminOrdersDataQuery } from "../../redux/features/OrderManagement/orderApi";
 import { RingLoader } from "react-spinners";
 import { TOrder } from "../../types/TOrder";
 import { useGetAllUserDataQuery } from "../../redux/features/auth/authApi";
+import { toast } from "sonner";
 const AdminDashboard = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(logout());
+    toast.success("Logout Successfully");
+    navigate("/");
   };
   const user = useAppSelector(useCurrentUser);
   //   console.log(user);
   const { data: usersData } = useGetAllUserDataQuery(undefined, {
-    pollingInterval: 30000,
+    // pollingInterval: 30000,
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -27,7 +31,7 @@ const AdminDashboard = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
-    pollingInterval: 30000,
+    // pollingInterval: 30000,
   });
 
   //   console.log(data);
@@ -57,10 +61,10 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* বাম দিক - এডমিন ইনফরমেশন */}
             <motion.aside
-              initial={{ opacity: 0, x: -100}}
+              initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="md:col-span-1 bg-[#2B1E36] p-6 rounded-lg shadow-lg"
+              className="md:col-span-1 bg-[#2B1E36] p-6 rounded-lg shadow-lg min-h-screen"
             >
               <div className="text-center">
                 <motion.img
@@ -75,18 +79,18 @@ const AdminDashboard = () => {
               </div>
 
               <div className="my-10 flex flex-col items-center justify-center gap-5">
-                <button
-                  onClick={() => handleLogout()}
-                  className="w-[150px] text-center px-12 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
-                >
-                  <span className="text-white">Home</span>
-                </button>
                 <Link
                   to="/"
                   className="w-[150px] text-center px-12 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
                 >
-                  <span className="text-white">Logout</span>
+                  <span className="text-white">Home</span>
                 </Link>
+                <button
+                  onClick={() => handleLogout()}
+                  className="w-[150px] text-center px-12 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
+                >
+                  <span className="text-white">Logout</span>
+                </button>
               </div>
             </motion.aside>
 
@@ -94,7 +98,7 @@ const AdminDashboard = () => {
             <motion.main
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              className="md:col-span-3 bg-[#2B1E36] p-6 rounded-lg shadow-lg"
+              className="md:col-span-3 bg-[#2B1E36] p-6 rounded-lg shadow-lg min-h-screen"
             >
               <h1 className="text-2xl font-bold mb-6">Sales summary</h1>
 

@@ -13,6 +13,8 @@ import ProductDetails from "../pages/ProductDetails";
 import PaymentSuccessful from "../pages/Payment/PaymentSuccessful";
 import PaymentFailed from "../pages/Payment/PaymentFailed";
 import AdminDashboard from "../pages/Dashboard/AdminDashboard";
+import UserDashboard from "../pages/Dashboard/ProductManagement/UserDashboard";
+import ViewUserOrderHistory from "../pages/Dashboard/ViewUserOrderHistory";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +57,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element:<AdminDashboard/>
+        element: <AdminDashboard />,
       },
       {
         path: "add-product",
@@ -72,6 +74,20 @@ const router = createBrowserRouter([
       {
         path: "deactivating-accounts",
         element: <DeactivatingAccounts />,
+      },
+    ],
+  },
+  {
+    path: "/user/dashboard",
+    element: <Dashboard/>,
+    children: [
+      {
+        index: true,
+        element: <UserDashboard />,
+      },
+      {
+        path: "view-order-history",
+        element: <ViewUserOrderHistory />,
       },
     ],
   },

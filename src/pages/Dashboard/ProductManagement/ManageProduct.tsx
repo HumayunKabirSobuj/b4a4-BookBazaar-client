@@ -24,7 +24,7 @@ const ManageProduct = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
-    pollingInterval: 60000,
+    // pollingInterval: 60000,
   });
   const user = useAppSelector(useCurrentUser);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);

@@ -1,25 +1,34 @@
-import React, { useState } from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
 import {
   MdAddChart,
   MdDashboard,
+  MdManageHistory,
   MdOutlineProductionQuantityLimits,
 } from "react-icons/md";
-import { useAppSelector } from "../../redux/hooks";
-import { useCurrentUser } from "../../redux/features/auth/authSlice";
-import { NavLink, Outlet } from "react-router-dom";
-import { SiManageiq } from "react-icons/si";
-import { FaJediOrder, FaUserCog } from "react-icons/fa";
+
 import { GiSplitCross } from "react-icons/gi";
 
-const { Header, Sider, Content } = Layout;
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+
+import React, { useState } from "react";
+
+import { Button, Layout, Menu, theme } from "antd";
+import { NavLink, Outlet } from "react-router-dom";
+import { useAppSelector } from "../../redux/hooks";
+import { useCurrentUser } from "../../redux/features/auth/authSlice";
+import { FaJediOrder, FaUserCog } from "react-icons/fa";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
+
+const { Header, Content, Sider } = Layout;
 
 const userRole = {
   ADMIN: "admin",
   USER: "user",
 };
 const AdminDashboardLayout: React.FC = () => {
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
   const user = useAppSelector(useCurrentUser);
   let sidebarItems;
 
@@ -29,17 +38,16 @@ const AdminDashboardLayout: React.FC = () => {
         {
           key: "UserDashboard",
           icon: <MdDashboard />,
-          label: <NavLink to={"/dashboard"}>Dashboard</NavLink>,
+          label: <NavLink to={"/user/dashboard"}>Dashboard</NavLink>,
         },
         {
-          key: "UserDashboard",
-          icon: <MdDashboard />,
-          label: <NavLink to={"/dashboard"}>Dashboard</NavLink>,
-        },
-        {
-          key: "UserDashboard",
-          icon: <MdDashboard />,
-          label: <NavLink to={"/dashboard"}>Dashboard</NavLink>,
+          key: "view-order-history",
+          icon: <FaMoneyCheckDollar />,
+          label: (
+            <NavLink to={"/user/dashboard/view-order-history"}>
+              View order history
+            </NavLink>
+          ),
         },
       ];
       break;
@@ -66,7 +74,8 @@ const AdminDashboardLayout: React.FC = () => {
             },
             {
               key: "ManageProduct",
-              icon: <SiManageiq />,
+              icon: <MdManageHistory />,
+
               label: (
                 <NavLink to={"/admin/dashboard/manage-product"}>
                   Manage Product
@@ -106,27 +115,21 @@ const AdminDashboardLayout: React.FC = () => {
     default:
       break;
   }
-
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
 
   return (
-    <Layout style={{ height: "100%" }}>
+    <Layout>
       <Sider
-        
-        trigger={null}
-        collapsible
         collapsed={collapsed}
+        breakpoint="lg"
+        collapsedWidth="0"
         style={{ height: "100vh", position: "sticky", top: 0, left: 0 }}
       >
         <div className="demo-logo-vertical" />
         <Menu
-        
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["4"]}
           items={sidebarItems}
         />
       </Sider>
@@ -147,16 +150,16 @@ const AdminDashboardLayout: React.FC = () => {
             }}
           />
         </Header>
-        <Content
-          style={{
-            // margin: "24px 16px",
-            // padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          <Outlet />
+        <Content>
+          <div
+            style={{
+              minHeight: 360,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            <Outlet />
+          </div>
         </Content>
       </Layout>
     </Layout>
@@ -164,8 +167,3 @@ const AdminDashboardLayout: React.FC = () => {
 };
 
 export default AdminDashboardLayout;
-
-
-
-
-
