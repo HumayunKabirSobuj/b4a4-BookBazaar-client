@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { RingLoader } from "react-spinners";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 import { useGetAdminOrdersDataQuery } from "../../../redux/features/OrderManagement/orderApi";
@@ -9,7 +9,7 @@ const ManagingOrders = () => {
   const user = useAppSelector(useCurrentUser); // বর্তমান ইউজারের ডেটা সিলেক্ট করা হচ্ছে
 
   // API কলে userEmailData পাঠানো
-  const { data, isLoading } = useGetAdminOrdersDataQuery(user?.email,{
+  const { data, isLoading } = useGetAdminOrdersDataQuery(user?.email, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
@@ -28,6 +28,10 @@ const ManagingOrders = () => {
   }
 
   const orderData = data?.data;
+  // console.log(orderData);
+
+
+  
 
   return (
     <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white p-6 min-h-screen">
@@ -41,6 +45,8 @@ const ManagingOrders = () => {
               <th className="px-6 py-3 text-left">Price</th>
               <th className="px-6 py-3 text-left">Category</th>
               <th className="px-6 py-3 text-left">Transaction ID</th>
+              <th className="px-6 py-3 text-left">Status</th>
+              <th className="px-6 py-3 text-left">Change Status</th>
               <th className="px-6 py-3"></th>
             </tr>
           </thead>
@@ -62,7 +68,18 @@ const ManagingOrders = () => {
                 <td className="px-6 py-4">{item?.product?.title}</td>
                 <td className="px-6 py-4">৳ {item?.product?.price}</td>
                 <td className="px-6 py-4">{item?.product?.category}</td>
-                <td className="px-6 py-4">{item?.transactionId.slice(0, 10)}...</td>
+                <td className="px-6 py-4">
+                  {item?.transactionId.slice(0, 10)}...
+                </td>
+                <td className="px-6 py-4">{item?.orderStatus}</td>
+                <td className="py-4 space-x-1.5">
+                  <button className="text-white bg-gradient-to-r from-purple-500 to-blue-500  hover:from-blue-500 hover:to-purple-500 focus:outline-none  text-xs py-1 px-3 rounded-full hover:bg-blue-600">
+                    Accept
+                  </button>
+                  <button className="text-white bg-gradient-to-r from-purple-500 to-blue-500  hover:from-blue-500 hover:to-purple-500 focus:outline-none  text-xs py-1 px-3 rounded-full hover:bg-blue-600">
+                    Cencel
+                  </button>
+                </td>
                 <td className="px-6 py-4">
                   <button
                     className="text-white bg-gradient-to-r from-purple-500 to-blue-500  hover:from-blue-500 hover:to-purple-500 focus:outline-none  text-xs py-1 px-3 rounded-full hover:bg-blue-600"
@@ -86,11 +103,12 @@ const ManagingOrders = () => {
               <strong>Name:</strong> {selectedBuyer?.userInfo.name}
             </p>
             <p className="py-2">
-              <strong>Email:</strong>  {selectedBuyer?.userInfo.email}
+              <strong>Email:</strong> {selectedBuyer?.userInfo.email}
             </p>
             <p className="py-2">
               <strong>Transaction ID:</strong> {selectedBuyer?.transactionId}
             </p>
+
             <div className="absolute top-3 right-3">
               <button
                 className="bg-red-500 text-white py-1 px-3 rounded-full hover:bg-red-600"

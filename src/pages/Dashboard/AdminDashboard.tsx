@@ -57,7 +57,7 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* বাম দিক - এডমিন ইনফরমেশন */}
             <motion.aside
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -100}}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               className="md:col-span-1 bg-[#2B1E36] p-6 rounded-lg shadow-lg"
