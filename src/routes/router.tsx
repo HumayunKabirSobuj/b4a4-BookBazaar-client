@@ -12,6 +12,7 @@ import AllProducts from "../pages/Dashboard/ProductManagement/AllProducts";
 import ProductDetails from "../pages/ProductDetails";
 import PaymentSuccessful from "../pages/Payment/PaymentSuccessful";
 import PaymentFailed from "../pages/Payment/PaymentFailed";
+import AdminDashboard from "../pages/Dashboard/AdminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
     path: "/admin/dashboard",
     element: <Dashboard />,
     children: [
+      {
+        index: true,
+        element:<AdminDashboard/>
+      },
       {
         path: "add-product",
         element: <AddProduct />,

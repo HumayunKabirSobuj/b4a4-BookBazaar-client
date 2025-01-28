@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { RingLoader } from "react-spinners";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 import { useGetAdminOrdersDataQuery } from "../../../redux/features/OrderManagement/orderApi";
@@ -9,7 +9,12 @@ const ManagingOrders = () => {
   const user = useAppSelector(useCurrentUser); // বর্তমান ইউজারের ডেটা সিলেক্ট করা হচ্ছে
 
   // API কলে userEmailData পাঠানো
-  const { data, isLoading } = useGetAdminOrdersDataQuery(user?.email);
+  const { data, isLoading } = useGetAdminOrdersDataQuery(user?.email,{
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+    pollingInterval: 30000,
+  });
 
   // Modal state
   const [selectedBuyer, setSelectedBuyer] = useState<TOrder | null>(null);
