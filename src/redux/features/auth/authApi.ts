@@ -28,6 +28,13 @@ const authApi = baseApi.injectEndpoints({
         body: userInfo,
       }),
     }),
+    activeAccount: builder.mutation({
+      query: (userInfo) => ({
+        url: "/api/auth/admin/make-active-user",
+        method: "POST",
+        body: userInfo,
+      }),
+    }),
     changeRole: builder.mutation({
       query: (userRole) => ({
         url: "/api/auth/admin/change-user-role",
@@ -43,5 +50,6 @@ export const {
   useRegisterMutation,
   useGetAllUserDataQuery,
   useDeactivateAccountMutation,
+  useActiveAccountMutation,
   useChangeRoleMutation,
 } = authApi;

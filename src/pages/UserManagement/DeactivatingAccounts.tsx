@@ -1,5 +1,6 @@
 import { RingLoader } from "react-spinners";
 import {
+  useActiveAccountMutation,
   useChangeRoleMutation,
   useDeactivateAccountMutation,
   useGetAllUserDataQuery,
@@ -17,8 +18,14 @@ type TUser = {
   _id: string; // ObjectId as a string
 };
 const DeactivatingAccounts = () => {
-  const { data, isLoading } = useGetAllUserDataQuery(undefined);
+  const { data, isLoading } = useGetAllUserDataQuery(undefined, {
+    pollingInterval: 2000,
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
   const [deactivateAccount] = useDeactivateAccountMutation();
+  const [activeAccount] = useActiveAccountMutation();
   const [changeRole] = useChangeRoleMutation();
   // console.log(data?.data);
 
@@ -44,6 +51,26 @@ const DeactivatingAccounts = () => {
       // console.log(userInfo);
 
       const result = await deactivateAccount(userInfo).unwrap(); // unwrap to get the actual response data
+      // console.log(result);
+      // handle the success response
+
+      toast.success(result.message, { duration: 2000 });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      // console.error("Error deactivating account:", err);
+    }
+  };
+  const handleActive = async (id: string) => {
+    try {
+      // console.log(id);
+
+      const userInfo = {
+        id: id,
+      };
+
+      // console.log(userInfo);
+
+      const result = await activeAccount(userInfo).unwrap(); // unwrap to get the actual response data
       // console.log(result);
       // handle the success response
 
@@ -134,14 +161,26 @@ const DeactivatingAccounts = () => {
                 </td>
                 <td className="px-6 py-4">
                   {" "}
-                  <button
-                    onClick={() => {
-                      handleDeactive(item._id);
-                    }}
-                    className="text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none px-2 py-1"
-                  >
-                    Deactivate
-                  </button>
+                  {item?.isBlocked === false && (
+                    <button
+                      onClick={() => {
+                        handleDeactive(item._id);
+                      }}
+                      className="text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none px-2 py-1 w-[100px]"
+                    >
+                      Deactivate
+                    </button>
+                  )}
+                  {item?.isBlocked === true && (
+                    <button
+                      onClick={() => {
+                        handleActive(item._id);
+                      }}
+                      className="text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none px-2 py-1 w-[100px]"
+                    >
+                      Make Active
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

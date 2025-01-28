@@ -20,7 +20,12 @@ type TBook = {
   _id: string;
 };
 const ManageProduct = () => {
-  const { data, isLoading } = useGetAllBookDataQuery(undefined);
+  const { data, isLoading } = useGetAllBookDataQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+    pollingInterval: 60000,
+  });
   const user = useAppSelector(useCurrentUser);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
 
