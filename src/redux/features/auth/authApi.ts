@@ -16,9 +16,32 @@ const authApi = baseApi.injectEndpoints({
         body: userInfo,
       }),
     }),
-  
-
+    getAllUserData: builder.query({
+      query: () => ({
+        url: "/api/auth/admin/get-all-user-information",
+      }),
+    }),
+    deactivateAccount: builder.mutation({
+      query: (userInfo) => ({
+        url: "/api/auth/admin/block-user",
+        method: "POST",
+        body: userInfo,
+      }),
+    }),
+    changeRole: builder.mutation({
+      query: (userRole) => ({
+        url: "/api/auth/admin/change-user-role",
+        method: "POST",
+        body: userRole,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useGetAllUserDataQuery,
+  useDeactivateAccountMutation,
+  useChangeRoleMutation,
+} = authApi;

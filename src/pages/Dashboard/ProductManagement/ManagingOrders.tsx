@@ -27,7 +27,7 @@ const ManagingOrders = () => {
   return (
     <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white p-6 min-h-screen">
       <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-2">
+        <table className="min-w-full table-auto ">
           {/* Table Head */}
           <thead>
             <tr>
