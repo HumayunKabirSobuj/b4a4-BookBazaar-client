@@ -39,6 +39,10 @@ const ProductDetails = () => {
   }
 
   const handleProceedToBuy = async (id: string) => {
+    if (bookData.numberOfBooks < 1) {
+      return toast.error("Insufficient stock", { duration: 2000 });
+    }
+
     // console.log(id);
     if (user?.email === bookData?.authorEmail) {
       return toast.error("You cannot buy your own product");
@@ -52,8 +56,7 @@ const ProductDetails = () => {
     };
 
     const result = await addOrder(productInfo).unwrap();
-
-    // console.log(result);
+   
     window.location.replace(result.url);
   };
   return (
