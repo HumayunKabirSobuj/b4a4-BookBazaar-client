@@ -17,6 +17,8 @@ import UserDashboard from "../pages/Dashboard/ProductManagement/UserDashboard";
 import ViewUserOrderHistory from "../pages/Dashboard/ViewUserOrderHistory";
 import AboutUsPage from "../pages/AboutUsPage";
 import UpdateProduct from "../pages/Dashboard/ProductManagement/UpdateProduct";
+import AdminProtectedLayout from "../components/ProtectedLayouts/AdminProtectedLayout";
+import UserProtectedLayout from "../components/ProtectedLayouts/UserProtectedLayout";
 
 const router = createBrowserRouter([
   {
@@ -59,7 +61,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/dashboard",
-    element: <Dashboard />,
+    element: (
+      <AdminProtectedLayout>
+        <Dashboard />
+      </AdminProtectedLayout>
+    ),
     children: [
       {
         index: true,
@@ -89,7 +95,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/user/dashboard",
-    element: <Dashboard />,
+    element: (
+      <UserProtectedLayout>
+        <Dashboard />
+      </UserProtectedLayout>
+    ),
     children: [
       {
         index: true,
