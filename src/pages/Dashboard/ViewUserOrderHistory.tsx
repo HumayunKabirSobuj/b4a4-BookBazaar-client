@@ -1,26 +1,27 @@
 import React, { useState } from "react";
 import { useCurrentUser } from "../../redux/features/auth/authSlice";
 import { useAppSelector } from "../../redux/hooks";
-import { useGetUserOrdersDataQuery } from "../../redux/features/OrderManagement/orderApi";
+import {
+  useDeleteOrderMutation,
+  useGetUserOrdersDataQuery,
+} from "../../redux/features/OrderManagement/orderApi";
 import { RingLoader } from "react-spinners";
 import { TOrder } from "../../types/TOrder";
-
-
+import { toast } from "sonner";
 
 const ViewUserOrderHistory: React.FC = () => {
   const user = useAppSelector(useCurrentUser); // বর্তমান ইউজারের ডেটা সিলেক্ট করা হচ্ছে
-
+  const [deleteOrder] = useDeleteOrderMutation();
   // API কলে userEmailData পাঠানো
   const { data, isLoading } = useGetUserOrdersDataQuery(user?.email, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
-    // pollingInterval: 30000,
+    pollingInterval: 2000,
   });
 
   // console.log("data =>", data);
   const [selectedAuthor, setSelectedAuthor] = useState<TOrder | null>(null);
-
 
   if (isLoading) {
     return (
@@ -31,6 +32,23 @@ const ViewUserOrderHistory: React.FC = () => {
   }
 
   const userOrderData = data?.data;
+  const handleDeleteOrder = async (id: string) => {
+    // console.log(id);
+    const orderInfo = {
+      id: id,
+    };
+
+    // console.log(orderInfo);
+
+    try {
+      const result = await deleteOrder(orderInfo).unwrap();
+      // console.log(result);
+      toast.success(result.message);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Something Went Wrong");
+    }
+  };
 
   return (
     <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white p-6 min-h-screen">
@@ -72,10 +90,12 @@ const ViewUserOrderHistory: React.FC = () => {
                 </td>
                 <td className="px-6 py-4">{item?.orderStatus}</td>
                 <td className="py-4 text-center">
-                  <button className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500 focus:outline-none text-xs py-1 px-3 rounded-full hover:bg-blue-600">
+                  <button
+                    onClick={() => handleDeleteOrder(item?._id)}
+                    className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500 focus:outline-none text-xs py-1 px-3 rounded-full hover:bg-blue-600"
+                  >
                     Delete
                   </button>
-                  
                 </td>
                 <td className="px-6 py-4">
                   <button
@@ -102,7 +122,6 @@ const ViewUserOrderHistory: React.FC = () => {
             <p className="py-2">
               <strong>Email:</strong> {selectedAuthor?.product?.authorEmail}
             </p>
-            
 
             <div className="absolute top-3 right-3">
               <button

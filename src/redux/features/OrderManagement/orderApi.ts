@@ -29,6 +29,28 @@ const orderApi = baseApi.injectEndpoints({
         },
       }),
     }),
+
+    acceptOrder: builder.mutation({
+      query: (bookInfo) => ({
+        url: "/payment/accept-order",
+        method: "PUT",
+        body: bookInfo,
+      }),
+    }),
+    cencelOrder: builder.mutation({
+      query: (bookInfo) => ({
+        url: "/payment/cencel-order",
+        method: "PUT",
+        body: bookInfo,
+      }),
+    }),
+    deleteOrder: builder.mutation({
+      query: (orderInfo) => ({
+        url: "/payment/delete-order",
+        method: "PUT",
+        body: orderInfo,
+      }),
+    }),
   }),
 });
 
@@ -36,4 +58,7 @@ export const {
   useAddOrderMutation,
   useGetAdminOrdersDataQuery,
   useGetUserOrdersDataQuery,
+  useAcceptOrderMutation,
+  useCencelOrderMutation,
+  useDeleteOrderMutation,
 } = orderApi;
