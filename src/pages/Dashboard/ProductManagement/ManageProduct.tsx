@@ -1,9 +1,13 @@
 import { RingLoader } from "react-spinners";
-import { useGetAllBookDataQuery } from "../../../redux/features/productManagement/productApi";
+import {
+  useDeleteBookMutation,
+  useGetAllBookDataQuery,
+} from "../../../redux/features/productManagement/productApi";
 import { useAppSelector } from "../../../redux/hooks";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type TBook = {
   authorEmail: string;
@@ -26,6 +30,7 @@ const ManageProduct = () => {
     refetchOnReconnect: true,
     // pollingInterval: 60000,
   });
+  const [deleteBook] = useDeleteBookMutation();
   const user = useAppSelector(useCurrentUser);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
 
@@ -47,6 +52,21 @@ const ManageProduct = () => {
   const matchBook = allBooksData.filter(
     (item: TBook) => item?.authorEmail === user?.email
   );
+
+  const handleDeleteProduct = async (id: string) => {
+    // console.log(id);
+    const bookInfo = {
+      id: id,
+    };
+    try {
+      const result = await deleteBook(bookInfo).unwrap();
+      // console.log(result);
+      toast.success(result?.message, { duration: 2000 });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Something Went Wrong..", { duration: 2000 });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
@@ -111,20 +131,19 @@ const ManageProduct = () => {
                       {dropdownOpen === item._id && (
                         <div className="absolute right-0 mt-2 w-48 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg ">
                           <ul className="py-1 space-y-2">
-                            {user && (
-                              <li>
-                                <button className="text-center py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full">
-                                  Delete
-                                </button>
-                              </li>
-                            )}
                             <li>
-                              <li>
-                                <button className="text-center py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full">
-                                  Update
-                                </button>
-                              </li>
+                              <button className="text-center py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full">
+                                Update
+                              </button>
                             </li>
+                            {user && (
+                              <button
+                                onClick={() => handleDeleteProduct(item?._id)}
+                                className="text-center py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full"
+                              >
+                                Delete
+                              </button>
+                            )}
                           </ul>
                         </div>
                       )}
