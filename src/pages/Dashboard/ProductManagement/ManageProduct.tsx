@@ -8,6 +8,7 @@ import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 type TBook = {
   authorEmail: string;
@@ -133,13 +134,18 @@ const ManageProduct = () => {
                           <ul className="py-1 space-y-2">
                             <li>
                               <button className="text-center py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full">
-                                Update
+                                <Link
+                                  to={`/admin/dashboard/update-product/${item._id}`}
+                                
+                                >
+                                  Update
+                                </Link>
                               </button>
                             </li>
                             {user && (
                               <button
                                 onClick={() => handleDeleteProduct(item?._id)}
-                                className="text-center py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full"
+                                className="text-center text-blue-400 py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full"
                               >
                                 Delete
                               </button>

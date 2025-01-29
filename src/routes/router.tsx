@@ -16,6 +16,7 @@ import AdminDashboard from "../pages/Dashboard/AdminDashboard";
 import UserDashboard from "../pages/Dashboard/ProductManagement/UserDashboard";
 import ViewUserOrderHistory from "../pages/Dashboard/ViewUserOrderHistory";
 import AboutUsPage from "../pages/AboutUsPage";
+import UpdateProduct from "../pages/Dashboard/ProductManagement/UpdateProduct";
 
 const router = createBrowserRouter([
   {
@@ -52,7 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: "about-us",
-        element:<AboutUsPage/>
+        element: <AboutUsPage />,
       },
     ],
   },
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
       {
         path: "deactivating-accounts",
         element: <DeactivatingAccounts />,
+      },
+      {
+        path: "update-product/:id",
+        element: <UpdateProduct />,
       },
     ],
   },

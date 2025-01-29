@@ -58,7 +58,7 @@ const UserDashboard = () => {
             <div className="text-center">
               <motion.img
                 whileHover={{ scale: 1.05 }}
-                src="https://via.placeholder.com/100"
+                src={user?.imageUrl}
                 alt="User"
                 className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-purple-400"
               />

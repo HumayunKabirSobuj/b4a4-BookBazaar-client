@@ -1,11 +1,13 @@
-import axios from "axios";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAppSelector } from "../../../redux/hooks";
-import { useCurrentUser } from "../../../redux/features/auth/authSlice";
+
 import { RingLoader } from "react-spinners";
-import { useAddBookMutation } from "../../../redux/features/productManagement/productApi";
+import {
+  useGetAllBookDataQuery,
+  useUpdateBookMutation,
+} from "../../../redux/features/productManagement/productApi";
 import { toast } from "sonner";
+import { useParams } from "react-router-dom";
 
 interface BookFormData {
   title: string;
@@ -16,65 +18,63 @@ interface BookFormData {
   category: string;
 }
 
-const AddProduct = () => {
+type TBook = {
+  authorEmail: string;
+  authorName: string;
+  category: string;
+  description: string;
+  imageUrl: string;
+  isAvaillable: boolean;
+  isDeleted: boolean;
+  numberOfBooks: number;
+  price: string;
+  title: string;
+  __v: number;
+  _id: string;
+};
+
+const UpdateProduct = () => {
+  const { data: allBookData } = useGetAllBookDataQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+    // pollingInterval: 60000,
+  });
+
+  const [updateBook] = useUpdateBookMutation();
+
+  //   console.log(data?.data);
+
+  const { id } = useParams();
+  //   console.log(id);
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
   } = useForm<BookFormData>();
 
-  const user = useAppSelector(useCurrentUser);
-
-  const [addBook] = useAddBookMutation();
+  const matchBook = allBookData?.data?.find((item: TBook) => item?._id === id);
+  //   console.log(matchBook);
 
   const [loading, setLoading] = useState(false);
   const onSubmit: SubmitHandler<BookFormData> = async (data) => {
     try {
+      //   console.log(data);
+
       setLoading(true);
-      const image = data.image[0]; // Ensure this is correct
-      const newFormData = new FormData();
-      newFormData.append("file", image); // Add the image file
-      newFormData.append("upload_preset", "humayunkabir"); // Your upload preset
-      newFormData.append("cloud_name", "dn7oeugls"); // Not necessary for the request
 
-      const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dn7oeugls/image/upload",
-        newFormData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const imageUrl = response.data.url;
-      const { description, numberOfBooks, price, title, category } = data;
       const bookData = {
-        description,
-        numberOfBooks,
-        price,
-        title,
-        imageUrl,
-        authorName: user?.name,
-        authorEmail: user?.email,
-        isAvaillable: true,
-        category,
+        BookId: id,
+        bookInfo: data,
       };
+      //   console.log(bookData);
 
-      // console.log("Book data,", bookData);
-
-      const finalResult = await addBook(bookData).unwrap();
-      // console.log("Final result, ", finalResult);
-
-      if (finalResult.success) {
-        toast.success("Book Data Added Successfully", { duration: 2000 });
-      }
-
-      reset()
+      const result = await updateBook(bookData).unwrap();
+      //   console.log(result);
+      toast.success(result.message,{duration:2000});
 
       setLoading(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("something went wrong..", { duration: 2000 });
     }
@@ -100,6 +100,7 @@ const AddProduct = () => {
           <div>
             <label className="block text-sm font-medium mb-2">Title</label>
             <input
+              defaultValue={matchBook?.title}
               {...register("title", { required: "Title is required" })}
               type="text"
               placeholder="Enter book title"
@@ -110,17 +111,40 @@ const AddProduct = () => {
               } focus:outline-none focus:ring-2`}
             />
             {errors.title && (
-              <p className="text-red-500 text-sm mt-1">Title is required</p>
+              <p className="text-red-500 text-sm mt-1">
+                Title is required you must be type{" "}
+              </p>
             )}
           </div>
 
-          {/* Number of Books & Image Upload */}
+          {/* Number of Books & Price*/}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Price Field */}
+            <div>
+              <label className="block text-sm font-medium mb-2">Price</label>
+              <input
+                defaultValue={matchBook?.price}
+                {...register("price", { required: "Price is required" })}
+                type="text"
+                placeholder="৳"
+                className={`w-full px-4 py-2 text-white rounded-lg  border ${
+                  errors.price
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                } focus:outline-none focus:ring-2`}
+              />
+              {errors.price && (
+                <p className="text-red-500 text-sm mt-1">
+                  Price is required you must be type{" "}
+                </p>
+              )}
+            </div>
             <div>
               <label className="block text-sm font-medium mb-2">
                 Number of Books
               </label>
               <input
+                defaultValue={matchBook?.numberOfBooks}
                 {...register("numberOfBooks", {
                   required: "Number of Books is required",
                 })}
@@ -134,29 +158,8 @@ const AddProduct = () => {
               />
               {errors.numberOfBooks && (
                 <p className="text-red-500 text-sm mt-1">
-                  Number of Books is required
+                  Number of Books is required you must be type
                 </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Image</label>
-              {loading ? (
-                <p>Uploading, please wait...</p>
-              ) : (
-                <input
-                  {...register("image", { required: "Image is required" })}
-                  type="file"
-                  accept="image/*"
-                  className={`w-full px-4 py-2 text-white rounded-lg  border ${
-                    errors.image
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-700 focus:ring-blue-500"
-                  } focus:outline-none focus:ring-2`}
-                />
-              )}
-              {errors.image && (
-                <p className="text-red-500 text-sm mt-1">Image is required</p>
               )}
             </div>
           </div>
@@ -167,6 +170,7 @@ const AddProduct = () => {
               Book Category
             </label>
             <select
+              defaultValue={matchBook?.category}
               id="bookCategory"
               className={`w-full px-4 py-2 text-gray-700 rounded-lg border ${
                 errors.category
@@ -174,7 +178,7 @@ const AddProduct = () => {
                   : "border-gray-700 focus:ring-blue-500"
               } focus:outline-none focus:ring-2`}
               {...register("category", { required: "Category is required" })}
-              defaultValue="" // Use defaultValue for the default selection
+              // Use defaultValue for the default selection
             >
               <option value="" disabled>
                 --Select a Category--
@@ -184,25 +188,9 @@ const AddProduct = () => {
               <option value="children">Children's Books</option>
             </select>
             {errors.category && (
-              <p className="text-red-500 text-sm mt-1">Category is required</p>
-            )}
-          </div>
-
-          {/* Price Field */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Price</label>
-            <input
-              {...register("price", { required: "Price is required" })}
-              type="text"
-              placeholder="৳"
-              className={`w-full px-4 py-2 text-white rounded-lg  border ${
-                errors.price
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-              } focus:outline-none focus:ring-2`}
-            />
-            {errors.price && (
-              <p className="text-red-500 text-sm mt-1">Price is required</p>
+              <p className="text-red-500 text-sm mt-1">
+                Category is required you must be type{" "}
+              </p>
             )}
           </div>
 
@@ -212,6 +200,7 @@ const AddProduct = () => {
               Description
             </label>
             <textarea
+              defaultValue={matchBook?.description}
               {...register("description", {
                 required: "Description is required",
               })}
@@ -224,7 +213,7 @@ const AddProduct = () => {
             />
             {errors.description && (
               <p className="text-red-500 text-sm mt-1">
-                Description is required
+                Description is required you must be type
               </p>
             )}
           </div>
@@ -242,4 +231,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;

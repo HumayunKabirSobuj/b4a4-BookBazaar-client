@@ -7,6 +7,7 @@ export type TUser = {
   iat: number;
   name: string;
   role: string;
+  imageUrl: string;
 };
 
 type TAuthState = {
@@ -33,7 +34,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setUser ,logout} = authSlice.actions;
+export const { setUser, logout } = authSlice.actions;
 export default authSlice.reducer;
 
 export const useCurrentToken = (state: RootState) => state.auth.token;
