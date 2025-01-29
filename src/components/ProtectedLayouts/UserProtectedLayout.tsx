@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { logout, useCurrentUser } from "../../redux/features/auth/authSlice";
 
 interface UserProtectedLayoutProps {
-  children: ReactNode; // ✅ children প্রপ্স গ্রহণ করবে
+  children: ReactNode; 
 }
 
 const UserProtectedLayout = ({ children }: UserProtectedLayoutProps) => {
@@ -16,7 +16,7 @@ const UserProtectedLayout = ({ children }: UserProtectedLayoutProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>; // ✅ children রেন্ডার করবে
+  return <>{children}</>; 
 };
 
 export default UserProtectedLayout;
