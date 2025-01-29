@@ -140,19 +140,21 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 items-center">
-            <Link to="/" className="text-xl hover:text-[#FFD700]">
+            <Link to="/" className="text-lg hover:text-[#FFD700]">
               Home
             </Link>
-            <Link to="/all-product" className="text-xl hover:text-[#FFD700]">
+            <Link to="/all-product" className="text-lg hover:text-[#FFD700]">
               All Products
             </Link>
+            <Link to="/about-us" className="text-lg hover:text-[#FFD700]">
+              About Us
+            </Link>
             {!user && (
-              <Link to="/login" className="text-xl hover:text-[#FFD700]">
+              <Link to="/login" className="text-lg hover:text-[#FFD700]">
                 Login
               </Link>
             )}
 
-           
             {user && (
               <div className="relative">
                 {/* Avatar */}
@@ -216,7 +218,10 @@ const Navbar = () => {
           <Link to="/" className="block text-lg hover:text-[#FFD700]">
             Home
           </Link>
-          <Link to="/all-product" className="block text-lg hover:text-[#FFD700]">
+          <Link
+            to="/all-product"
+            className="block text-lg hover:text-[#FFD700]"
+          >
             All Products
           </Link>
           {!user && (

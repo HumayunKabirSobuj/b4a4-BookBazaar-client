@@ -15,6 +15,7 @@ import PaymentFailed from "../pages/Payment/PaymentFailed";
 import AdminDashboard from "../pages/Dashboard/AdminDashboard";
 import UserDashboard from "../pages/Dashboard/ProductManagement/UserDashboard";
 import ViewUserOrderHistory from "../pages/Dashboard/ViewUserOrderHistory";
+import AboutUsPage from "../pages/AboutUsPage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
       },
+      {
+        path: "about-us",
+        element:<AboutUsPage/>
+      },
     ],
   },
   {
@@ -79,7 +84,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/user/dashboard",
-    element: <Dashboard/>,
+    element: <Dashboard />,
     children: [
       {
         index: true,
