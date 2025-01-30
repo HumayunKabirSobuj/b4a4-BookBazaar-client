@@ -39,12 +39,12 @@ const HowToWorks = () => {
   };
 
   return (
-    <div className="lg:mt-8 mt-8 text-white">
-      <div className="text-center lg:mb-14 mb-8">
+    <div className="lg:pt-8 pt-8 text-white bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
+      <div className="text-center lg:pb-14 pb-8">
         <h2 className="lg:text-6xl text-3xl font-semibold text-white">
           How To Works?
         </h2>
-        <p className="text-[#F3F3F4] text-base lg:text-lg font-normal mt-4 mx-auto lg:w-[40rem] w-[90%]">
+        <p className="text-[#F3F3F4] text-base lg:text-lg font-normal pt-4 mx-auto lg:w-[40rem] w-[90%]">
           Based on the description of BookBazzar and the image provided, here is
           a 5-step process that BookBazzar uses to scale a customers business
         </p>
@@ -52,7 +52,7 @@ const HowToWorks = () => {
 
       <div className="relative">
         {steps.map((step, index) => (
-          <div key={index} className="relative mb-4 rounded-2xl">
+          <div key={index} className="relative pb-4 rounded-2xl">
             <div
               className="flex items-center lg:ml-[150px] lg:mr-[150px] justify-between p-4 cursor-pointer"
               onClick={() => toggleAccordion(index)}

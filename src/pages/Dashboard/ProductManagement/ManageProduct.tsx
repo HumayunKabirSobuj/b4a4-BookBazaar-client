@@ -5,8 +5,7 @@ import {
 } from "../../../redux/features/productManagement/productApi";
 import { useAppSelector } from "../../../redux/hooks";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { useState } from "react";
+
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
@@ -29,15 +28,13 @@ const ManageProduct = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
-    // pollingInterval: 60000,
+    pollingInterval: 2000,
   });
   const [deleteBook] = useDeleteBookMutation();
   const user = useAppSelector(useCurrentUser);
-  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  
 
-  const toggleDropdown = (id: string) => {
-    setDropdownOpen(dropdownOpen === id ? null : id);
-  };
+  
 
   if (isLoading) {
     return (
@@ -122,7 +119,7 @@ const ManageProduct = () => {
                     <td className="p-3 ">
                       <p>{item?.numberOfBooks}</p>
                     </td>
-                    <td className="p-3 relative">
+                    {/* <td className="p-3 relative">
                       <button
                         onClick={() => toggleDropdown(item._id)}
                         className="relative text-2xl"
@@ -145,7 +142,7 @@ const ManageProduct = () => {
                             {user && (
                               <button
                                 onClick={() => handleDeleteProduct(item?._id)}
-                                className="text-center text-blue-400 py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full"
+                                className="text-center  py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full"
                               >
                                 Delete
                               </button>
@@ -153,6 +150,20 @@ const ManageProduct = () => {
                           </ul>
                         </div>
                       )}
+                    </td> */}
+                    <td className="pt-7 flex items-center justify-start gap-2">
+                      <Link
+                        to={`/admin/dashboard/update-product/${item._id}`}
+                        className="text-white bg-gradient-to-r from-purple-500 to-blue-500  hover:from-blue-500 hover:to-purple-500 focus:outline-none  text-xs py-1 px-3 rounded-full hover:bg-blue-600"
+                      >
+                        <span className="text-white">Update</span>
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteProduct(item?._id)}
+                        className="text-white bg-gradient-to-r from-purple-500 to-blue-500  hover:from-blue-500 hover:to-purple-500 focus:outline-none  text-xs py-1 px-3 rounded-full hover:bg-blue-600"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}

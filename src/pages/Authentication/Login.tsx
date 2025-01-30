@@ -31,10 +31,10 @@ const Login = () => {
     // const toastId = toast.loading("Please wait...");
     try {
       const result = await login(data).unwrap();
-      console.log("Login : ", result);
+      // console.log("Login : ", result);
 
       const user = verifyToken(result.data.accessToken) as TUser;
-      console.log("user => ,", user);
+      // console.log("user => ,", user);
       if (result?.success) {
         toast.success("Login Successfully..", {
           // id: toastId,
@@ -46,7 +46,7 @@ const Login = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error:any) {
-      console.log("error =>", error);
+      // console.log("error =>", error);
       toast.error(error.data.message, { duration: 2000 });
     }
   };

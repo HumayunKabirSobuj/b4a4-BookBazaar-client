@@ -43,7 +43,7 @@ const FAQSection = () => {
   ];
 
   return (
-    <div className=" text-white p-8 min-h-screen lg:mb-[100px]">
+    <div className=" text-white p-8 min-h-screen lg:pb-[100px] bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
       {/* Section Title */}
 
       <div className="flex flex-col md:flex-row gap-4">

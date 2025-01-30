@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi";
 import { RingLoader } from "react-spinners";
 import { useAppSelector } from "../redux/hooks";
@@ -23,6 +23,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetAllBookDataQuery(undefined);
   const [addOrder] = useAddOrderMutation();
+  const navigate = useNavigate();
   //   console.log(id);
 
   //   console.log(data.data);
@@ -39,6 +40,11 @@ const ProductDetails = () => {
   }
 
   const handleProceedToBuy = async (id: string) => {
+    if (!user) {
+      toast.error("You want to login first..");
+      return navigate("/login");
+    }
+
     if (bookData.numberOfBooks < 1) {
       return toast.error("Insufficient stock", { duration: 2000 });
     }
@@ -56,7 +62,7 @@ const ProductDetails = () => {
     };
 
     const result = await addOrder(productInfo).unwrap();
-   
+
     window.location.replace(result.url);
   };
   return (
@@ -69,7 +75,7 @@ const ProductDetails = () => {
             <img
               src={bookData?.imageUrl}
               alt="Book Cover"
-              className="w-full h-[300px] rounded-lg shadow-lg object-cover"
+              className="w-full h-[300px] rounded-lg shadow-lg "
             />
           </div>
 

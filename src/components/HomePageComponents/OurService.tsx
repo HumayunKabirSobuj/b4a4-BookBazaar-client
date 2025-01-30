@@ -34,8 +34,8 @@ const OurService = () => {
   ];
 
   return (
-    <div>
-      <div className="space-y-4 pb-12 lg:mt-28 mt-20">
+    <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
+      <div className="space-y-4 pb-12 lg:pt-28 pt-5">
         <h1 className="lg:text-6xl text-[28px] font-semibold text-white text-center">
           Our Book Collection
         </h1>

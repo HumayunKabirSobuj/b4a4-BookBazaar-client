@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -120,14 +118,17 @@ const Navbar = () => {
           >
             All Products
           </Link>
+          <Link to="/about-us" className="block text-lg hover:text-[#FFD700]">
+            All Products
+          </Link>
           {!user && (
             <Link to="/login" className="block text-lg hover:text-[#FFD700]">
-              Login
+              About Us
             </Link>
           )}
           {user && (
             <Link
-              to="/dashboard"
+              to={`/${user.role}/dashboard`}
               className="block text-lg hover:text-[#FFD700]"
             >
               Dashboard

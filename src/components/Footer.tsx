@@ -3,23 +3,23 @@ import mail from "../assets/images/mail.png";
 
 const Footer = () => {
   return (
-    <div>
+    <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
       <div className="text-center">
-        <h1 className="text-5xl mb-3 font-semibold text-white">
+        <h1 className="lg:text-5xl text-2xl mb-3 font-semibold text-white pt-5">
           Subscribe to Our Newsletter
         </h1>
-        <p className="text-2xl mb-10 text-[#F3F3F4]">
+        <p className="lg:text-2xl text-xl mb-10 text-[#F3F3F4]">
           Join the 25000+ clients in our community and stay updated with the
           latest offers, news, and releases.
         </p>
       </div>
-      <div className="relative flex w-[343px] lg:w-[600px] h-[48px] lg:h-[88px] mx-auto justify-center items-center lg:mb-[72px]">
+      <div className="relative flex w-[343px] lg:w-[600px] h-[48px] lg:h-[88px] mx-auto justify-center items-center lg:mb-[72px] ">
         <input
-          className="bg-[#fff] rounded-[100px] w-full h-10 lg:h-14 px-5 mt-5"
+          className=" rounded-[100px] text-white w-full h-10 lg:h-14 px-5 mt-5 border border-gray-500"
           type="text"
           placeholder="Enter your email"
         />
-        <button className="absolute right-0 lg:right-0 mt-5 text-sm lg:text-2xl text-white font-normal rounded-[100px] border-3 border-[#C16EFD] bg-[linear-gradient(105deg,_#6384FC_4.1%,_#C16EFD_54.8%,_#6384FC_92.38%)] py-2  px-6 lg:px-9 flex items-center ">
+        <button className="absolute right-0 lg:right-0 mt-5 text-sm lg:text-2xl text-white font-normal rounded-[100px] border-3 border-[#C16EFD] bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] py-2  px-6 lg:px-9 flex items-center ">
           Subscribe
         </button>
       </div>

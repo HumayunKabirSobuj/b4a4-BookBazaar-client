@@ -1,6 +1,6 @@
 const WhyChoseBookBazzar = () => {
   return (
-    <div className="mt-20 flex lg:flex-row flex-col justify-center items-center  text-white">
+    <div className=" pt-20 lg:flex hidden lg:flex-row flex-col justify-center items-center  text-white bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
       <div className="lg:block flex items-center">
         <div>
           <h2 className="lg:text-6xl text-3xl hidden lg:block font-normal lg:font-semibold w-40 lg:w-[425px] mb-4">
