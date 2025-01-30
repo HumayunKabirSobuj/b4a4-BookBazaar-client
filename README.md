@@ -4,6 +4,12 @@ A full-stack MERN (MongoDB, Express, React, Node.js) e-commerce platform for buy
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Available-green)](https://bookbazzar-online-ph-a4.vercel.app)
 
+Live : 
+
+```
+https://bookbazzar-online-ph-a4.vercel.app
+```
+
 ## Features ✨
 
 ### Core Functionalities
