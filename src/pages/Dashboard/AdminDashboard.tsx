@@ -8,6 +8,13 @@ import { TOrder } from "../../types/TOrder";
 import { useGetAllUserDataQuery } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useState } from "react";
+import {
+  BarChart,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  ResponsiveContainer,
+} from "recharts";
 import { Pagination } from "../../components/Shared/Pagination";
 const itemsPerPage = 7;
 
@@ -57,7 +64,7 @@ const AdminDashboard = () => {
     startIndex + itemsPerPage
   );
 
-  console.log(paginatedOrders);
+  // console.log(paginatedOrders);
   const totalPages = Math.ceil(orderData.length / itemsPerPage);
   //   console.log(orderData);
   const priceData = orderData?.map((item: TOrder) =>
@@ -67,6 +74,34 @@ const AdminDashboard = () => {
   const totalPrice =
     priceData?.reduce((sum: number, price: number) => sum + price, 0) || 0;
   //   console.log(totalPrice);
+
+  const chartData = [
+    { month: "January", desktop: 186, mobile: 80 },
+    { month: "February", desktop: 305, mobile: 200 },
+    { month: "March", desktop: 237, mobile: 120 },
+    { month: "April", desktop: 73, mobile: 190 },
+    { month: "May", desktop: 209, mobile: 130 },
+    { month: "June", desktop: 214, mobile: 140 },
+  ];
+
+  const date = new Date();
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const currentMonth = monthNames[date.getMonth()]; // 0-11 → index অনুযায়ী
+  const currentYear = date.getFullYear();
 
   return (
     <div>
@@ -149,27 +184,53 @@ const AdminDashboard = () => {
               </div>
 
               {/* বিক্রয় চার্ট */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-[#3A2E42] p-4 rounded-lg mb-8"
-              >
-                <h3 className="text-xl font-bold mb-4">Sales trends</h3>
-                <div className="h-48 bg-[#2B1E36] rounded-lg p-4">
-                  {/* সিম্পল বার চার্ট */}
-                  <div className="flex h-full items-end justify-between">
-                    {[60, 80, 45, 90, 75].map((height, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ height: 0 }}
-                        animate={{ height: `${height}%` }}
-                        transition={{ delay: index * 0.1 }}
-                        className="w-12 bg-purple-500 mx-1 rounded-t-lg"
-                      />
-                    ))}
-                  </div>
+
+              <div className="rounded-xl border  p-6 shadow-sm lg:my-10 my-5">
+                {/* Header */}
+                <div className="mb-4">
+                
+                  <p className="text-sm text-white">January - {currentMonth} {currentYear}</p>
                 </div>
-              </motion.div>
+
+                {/* Chart */}
+                <div className="w-full h-64 ">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData}>
+                      <CartesianGrid vertical={false} stroke="#e5e7eb" />
+                      <XAxis
+                        dataKey="month"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                        tickFormatter={(value) => value.slice(0, 3)}
+                        stroke="#9ca3af"
+                      />
+                      {/* <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#fff",
+                          border: "1px solid #e5e7eb",
+                          borderRadius: 6,
+                        }}
+                        itemStyle={{ color: "#374151" }}
+                        labelStyle={{ color: "#6b7280", marginBottom: 4 }}
+                        cursor={{ fill: "#f3f4f6" }}
+                      /> */}
+                      <Bar
+                        dataKey="desktop"
+                        fill="#4f46e5"
+                        radius={[4, 4, 0, 0]}
+                      />
+                      <Bar
+                        dataKey="mobile"
+                        fill="#06b6d4"
+                        radius={[4, 4, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                
+              </div>
 
               {/* সাম্প্রতিক অর্ডার টেবিল */}
               <div className="overflow-x-auto">

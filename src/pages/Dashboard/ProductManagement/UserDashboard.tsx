@@ -6,8 +6,13 @@ import { toast } from "sonner";
 import { useGetUserOrdersDataQuery } from "../../../redux/features/OrderManagement/orderApi";
 import { TOrder } from "../../../types/TOrder";
 import { ScaleLoader } from "react-spinners";
+import { useState } from "react";
+import { Pagination } from "../../../components/Shared/Pagination";
+const itemsPerPage = 7;
 
 const UserDashboard = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const user = useAppSelector(useCurrentUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -43,6 +48,15 @@ const UserDashboard = () => {
   const totalPrice =
     priceData?.reduce((sum: number, price: number) => sum + price, 0) || 0;
   //   console.log(totalPrice);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedOrders = orderData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // console.log(paginatedOrders);
+  const totalPages = Math.ceil(orderData.length / itemsPerPage);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white ">
@@ -124,7 +138,7 @@ const UserDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orderData.map((item: TOrder) => (
+                  {paginatedOrders.map((item: TOrder) => (
                     <tr key={item._id}>
                       <td className="p-3">{item?._id}</td>
                       <td className="p-3">{item?.product?.authorName}</td>
@@ -138,6 +152,13 @@ const UserDashboard = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className="mt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
             </div>
           </motion.main>
         </div>

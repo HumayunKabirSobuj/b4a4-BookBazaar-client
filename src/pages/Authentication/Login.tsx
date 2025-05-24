@@ -8,7 +8,6 @@ import { verifyToken } from "../../utils/verifyToken";
 import { useAppDispatch } from "../../redux/hooks";
 import { setUser, TUser } from "../../redux/features/auth/authSlice";
 
-
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -44,8 +43,61 @@ const Login = () => {
       dispatch(setUser({ user: user, token: result.data.accessToken }));
       navigate("/");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // console.log("error =>", error);
+      toast.error(error.data.message, { duration: 2000 });
+    }
+  };
+
+  const adminLogin = async () => {
+    const data = {
+      email: "humayun@gmail.com",
+      password: "506034",
+    };
+    try {
+      const result = await login(data).unwrap();
+      // console.log("Login : ", result);
+
+      const user = verifyToken(result.data.accessToken) as TUser;
+      // console.log("user => ,", user);
+      if (result?.success) {
+        toast.success("Login Successfully..", {
+          // id: toastId,
+          duration: 2000,
+        });
+      }
+      dispatch(setUser({ user: user, token: result.data.accessToken }));
+      navigate("/");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // console.log("error =>", error);
+      toast.error(error.data.message, { duration: 2000 });
+    }
+  };
+  const userLogin = async () => {
+    const data = {
+      email: "humayun123@gmail.com",
+      password: "506034",
+    };
+    try {
+      const result = await login(data).unwrap();
+      // console.log("Login : ", result);
+
+      const user = verifyToken(result.data.accessToken) as TUser;
+      // console.log("user => ,", user);
+      if (result?.success) {
+        toast.success("Login Successfully..", {
+          // id: toastId,
+          duration: 2000,
+        });
+      }
+      dispatch(setUser({ user: user, token: result.data.accessToken }));
+      navigate("/");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       // console.log("error =>", error);
       toast.error(error.data.message, { duration: 2000 });
     }
@@ -55,6 +107,24 @@ const Login = () => {
     <div className="container mx-auto min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
       <div className="max-w-md w-full text-white rounded-lg shadow-lg p-8 md:p-12">
         <h1 className="text-3xl font-bold text-center mb-6">Welcome Back</h1>
+        <div className="flex gap-4 mt-6 justify-center items-center mb-6">
+          {/* Admin Credentials Button */}
+          <button
+            onClick={adminLogin}
+            className="w-full px-4 py-2 text-sm text-white font-medium border border-[#C16EFD] rounded-lg bg-[linear-gradient(105deg,_#6384FC_4.1%,_#C16EFD_54.8%,_#6384FC_92.38%)] flex items-center justify-center"
+          >
+            Admin Credentials
+          </button>
+
+          {/* User Credentials Button */}
+          <button
+            onClick={userLogin}
+            className="w-full px-4 py-2 text-sm text-white font-medium border border-[#C16EFD] rounded-lg bg-[linear-gradient(105deg,_#6384FC_4.1%,_#C16EFD_54.8%,_#6384FC_92.38%)] flex items-center justify-center"
+          >
+            User Credentials
+          </button>
+        </div>
+
         <p className="text-center text-gray-400 mb-8">
           Log in to continue exploring our vast collection of books!
         </p>

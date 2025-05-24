@@ -63,8 +63,14 @@ const ManageUsers = () => {
 
   const usersData = data?.data;
 
+  const userDataWithOutOneUserAndAdmin = usersData?.filter(
+    (user: TUser) =>
+      user?.email !== "humayun@gmail.com" &&
+      user?.email !== "humayun123@gmail.com"
+  );
+
   const filteredAndSortedUsers =
-    usersData?.filter((user: TUser) => {
+    userDataWithOutOneUserAndAdmin?.filter((user: TUser) => {
       // Search filter
       const search = searchTerm.toLowerCase();
       const matchesSearch =
@@ -178,7 +184,7 @@ const ManageUsers = () => {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-white">
-                    {usersData?.length || 0}
+                    {userDataWithOutOneUserAndAdmin?.length || 0}
                   </div>
                   <div className="text-sm text-gray-400">Total Users</div>
                 </div>
@@ -192,7 +198,7 @@ const ManageUsers = () => {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-white">
-                    {usersData?.filter((user: TUser) => !user.isBlocked)
+                    {userDataWithOutOneUserAndAdmin?.filter((user: TUser) => !user.isBlocked)
                       .length || 0}
                   </div>
                   <div className="text-sm text-gray-400">Active Users</div>
@@ -207,7 +213,7 @@ const ManageUsers = () => {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-white">
-                    {usersData?.filter((user: TUser) => user.role === "admin")
+                    {userDataWithOutOneUserAndAdmin?.filter((user: TUser) => user.role === "admin")
                       .length || 0}
                   </div>
                   <div className="text-sm text-gray-400">Administrators</div>
