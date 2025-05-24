@@ -1,199 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import { RingLoader } from "react-spinners";
-// import {
-//   useActiveAccountMutation,
-//   useChangeRoleMutation,
-//   useDeactivateAccountMutation,
-//   useGetAllUserDataQuery,
-// } from "../../redux/features/auth/authApi";
-// import { toast } from "sonner";
-
-// type TUser = {
-//   createdAt: string; // ISO date string
-//   email: string;
-//   isBlocked: boolean;
-//   name: string;
-//   role: string;
-//   updatedAt: string; // ISO date string
-//   __v: number;
-//   _id: string; // ObjectId as a string
-// };
-// const DeactivatingAccounts = () => {
-//   const { data, isLoading } = useGetAllUserDataQuery(undefined, {
-//     pollingInterval: 2000,
-//     refetchOnMountOrArgChange: true,
-//     refetchOnFocus: true,
-//     refetchOnReconnect: true,
-//   });
-//   const [deactivateAccount] = useDeactivateAccountMutation();
-//   const [activeAccount] = useActiveAccountMutation();
-//   const [changeRole] = useChangeRoleMutation();
-//   // console.log(data?.data);
-
-//   if (isLoading) {
-//     return (
-//       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-//         <RingLoader size={80} color="#1ca944" />
-//       </div>
-//     );
-//   }
-
-//   const usersData = data?.data;
-//   // console.log(usersData);
-
-//   const handleDeactive = async (id: string) => {
-//     try {
-//       // console.log(id);
-
-//       const userInfo = {
-//         id: id,
-//       };
-
-//       // console.log(userInfo);
-
-//       const result = await deactivateAccount(userInfo).unwrap(); // unwrap to get the actual response data
-//       // console.log(result);
-//       // handle the success response
-
-//       toast.success(result.message, { duration: 2000 });
-//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//     } catch (err) {
-//       // console.error("Error deactivating account:", err);
-//     }
-//   };
-//   const handleActive = async (id: string) => {
-//     try {
-//       // console.log(id);
-
-//       const userInfo = {
-//         id: id,
-//       };
-
-//       // console.log(userInfo);
-
-//       const result = await activeAccount(userInfo).unwrap(); // unwrap to get the actual response data
-//       // console.log(result);
-//       // handle the success response
-
-//       toast.success(result.message, { duration: 2000 });
-//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//     } catch (err) {
-//       // console.error("Error deactivating account:", err);
-//     }
-//   };
-
-//   const handleRoleChange = async (
-//     selectedRole: string,
-//     selectedUserEmail: string
-//   ) => {
-//     // console.log("Selected Role:", selectedRole);
-
-//     try {
-//       const userRole = {
-//         role: selectedRole,
-//         email: selectedUserEmail,
-//       };
-//       const result = await changeRole(userRole).unwrap();
-//       toast.success(result.message, { duration: 2000 });
-//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//     } catch (error) {
-//       toast.error("Something went wrong", { duration: 2000 });
-//     }
-//   };
-
-//   return (
-//     <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white p-6 min-h-screen">
-//       <div className="overflow-x-auto">
-//         <table className="min-w-full table-auto">
-//           {/* head */}
-//           <thead>
-//             <tr>
-//               <th className="px-6 py-3 text-left">Name</th>
-//               <th className="px-6 py-3 text-left">Email</th>
-//               <th className="px-6 py-3 text-left">Role</th>
-//               <th className="px-6 py-3 text-left">Change Role</th>
-//               <th className="px-6 py-3 text-left">Action</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {/* row 1 */}
-//             {usersData?.map((item: TUser, idx: number) => (
-//               <tr key={idx} className="border-b">
-//                 <td className="px-6 py-4">
-//                   <div className="flex items-center gap-3">
-//                     <div>
-//                       <div className="font-bold">{item.name}</div>
-//                     </div>
-//                   </div>
-//                 </td>
-//                 <td className="px-6 py-4">
-//                   <div className="font-bold">{item.email}</div>
-//                 </td>
-//                 <td className="px-6 py-4">
-//                   <div className="font-bold">{item.role}</div>
-//                 </td>
-//                 <td className="px-6 py-4">
-//                   <select
-//                     onChange={(e) =>
-//                       handleRoleChange(e.target.value, item.email)
-//                     }
-//                     defaultValue={""}
-//                     className="border rounded-lg px-2 py-1 focus:outline-none"
-//                   >
-//                     <option value="" disabled className="bg-[#1C1C32]">
-//                       Select Role
-//                     </option>
-
-//                     <option
-//                       value={"user"}
-//                       disabled={item.role === "user"}
-//                       className=" bg-[#1C1C32]"
-//                     >
-//                       User
-//                     </option>
-//                     <option
-//                       value={"admin"}
-//                       disabled={item.role === "admin"}
-//                       className="bg-[#1C1C32]"
-//                     >
-//                       Admin
-//                     </option>
-//                   </select>
-//                 </td>
-//                 <td className="px-6 py-4">
-//                   {" "}
-//                   {item?.isBlocked === false && (
-//                     <button
-//                       onClick={() => {
-//                         handleDeactive(item._id);
-//                       }}
-//                       className="text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none px-2 py-1 w-[100px]"
-//                     >
-//                       Deactivate
-//                     </button>
-//                   )}
-//                   {item?.isBlocked === true && (
-//                     <button
-//                       onClick={() => {
-//                         handleActive(item._id);
-//                       }}
-//                       className="text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none px-2 py-1 w-[100px]"
-//                     >
-//                       Make Active
-//                     </button>
-//                   )}
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//           {/* foot */}
-//         </table>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DeactivatingAccounts;
 
 "use client";
 
@@ -212,6 +17,8 @@ import {
   User,
   Mail,
   ChevronDown,
+  Filter,
+  Search,
 } from "lucide-react";
 import { useState } from "react";
 import { Pagination } from "../../components/Shared/Pagination";
@@ -231,6 +38,10 @@ const itemsPerPage = 7;
 
 const ManageUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [roleFilter, setRoleFilter] = useState("all");
+  // console.log(roleFilter);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
   const { data, isLoading } = useGetAllUserDataQuery(undefined, {
     pollingInterval: 2000,
@@ -252,9 +63,31 @@ const ManageUsers = () => {
 
   const usersData = data?.data;
 
+  const filteredAndSortedUsers =
+    usersData?.filter((user: TUser) => {
+      // Search filter
+      const search = searchTerm.toLowerCase();
+      const matchesSearch =
+        user.name.toLowerCase().includes(search) ||
+        user.email.toLowerCase().includes(search);
+
+      // Status filter (assuming isBlocked is boolean and statusFilter is "all" | "blocked" | "unblocked")
+      let matchesStatus = true;
+      if (roleFilter === "admin") {
+        matchesStatus = user.role === "admin";
+      } else if (roleFilter === "user") {
+        matchesStatus = user.role === "user";
+      }
+
+      return matchesSearch && matchesStatus;
+    }) || [];
+
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedUsers = usersData.slice(startIndex, startIndex + itemsPerPage);
-  const totalPages = Math.ceil(usersData.length / itemsPerPage);
+  const paginatedUsers = filteredAndSortedUsers.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+  const totalPages = Math.ceil(filteredAndSortedUsers.length / itemsPerPage);
 
   const handleDeactive = async (id: string) => {
     try {
@@ -382,6 +215,97 @@ const ManageUsers = () => {
               </div>
             </div>
           </div>
+
+          {/* Search and Filter Section */}
+          <div className="mb-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+              {/* Search Bar */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Filter Toggle Button */}
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200"
+              >
+                <Filter className="w-4 h-4" />
+                <span>Filters</span>
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    showFilters ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* Filter Options */}
+            {showFilters && (
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Status Filter */}
+                  <div>
+                    <label className="block text-sm font-medium text-purple-300 mb-2">
+                      Filter by Role
+                    </label>
+                    <select
+                      value={roleFilter}
+                      onChange={(e) => setRoleFilter(e.target.value)}
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    >
+                      <option value="all" className="bg-gray-800">
+                        All User
+                      </option>
+                      <option value="admin" className="bg-gray-800">
+                        Admin
+                      </option>
+                      <option value="user" className="bg-gray-800">
+                        User
+                      </option>
+                    </select>
+                  </div>
+
+                  {/* Price Sort */}
+                </div>
+
+                {/* Active Filters Display */}
+                {/* Active Filters Display */}
+                {(searchTerm || roleFilter !== "all") && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="text-sm text-purple-300">
+                      Active filters:
+                    </span>
+                    <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs">
+                      {roleFilter === "user" ? "User ↑" : "Admin ↑"}
+                    </span>
+                    {searchTerm && (
+                      <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
+                        Search: "{searchTerm}"
+                      </span>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        setSearchTerm("");
+                        setRoleFilter("all");
+                      }}
+                      className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-xs hover:bg-red-500/30 transition-colors"
+                    >
+                      Clear all
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border-b border-white/10">
@@ -481,7 +405,7 @@ const ManageUsers = () => {
                           <option
                             value=""
                             disabled
-                            className="bg-[#1C1C32] text-gray-300"
+                            className="bg-[#1C1C32] text-gray-300 "
                           >
                             Select Role
                           </option>

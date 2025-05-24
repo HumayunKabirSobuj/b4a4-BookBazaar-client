@@ -1,112 +1,151 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-"use client";
+"use client"
 
-import { useState } from "react";
-import { RingLoader } from "react-spinners";
-import { useCurrentUser } from "../../../redux/features/auth/authSlice";
+import { useState } from "react"
+import { RingLoader } from "react-spinners"
+import { useCurrentUser } from "../../../redux/features/auth/authSlice"
 import {
   useAcceptOrderMutation,
   useCencelOrderMutation,
   useDeleteOrderMutation,
   useGetAdminOrdersDataQuery,
-} from "../../../redux/features/OrderManagement/orderApi";
-import { useAppSelector } from "../../../redux/hooks";
-import { TOrder } from "../../../types/TOrder";
-import { toast } from "sonner";
-import { X, Eye, Check, XCircle, Trash2 } from "lucide-react";
-import { Pagination } from "../../../components/Shared/Pagination";
-const itemsPerPage = 7;
+} from "../../../redux/features/OrderManagement/orderApi"
+import { useAppSelector } from "../../../redux/hooks"
+import { TOrder } from "../../../types/TOrder"
+import { toast } from "sonner"
+import { X, Eye, Check, XCircle, Trash2, Search, Filter, ChevronDown } from 'lucide-react'
+import { Pagination } from "../../../components/Shared/Pagination"
+const itemsPerPage = 7
 
 const ManagingOrders = () => {
-  const user = useAppSelector(useCurrentUser);
-  const [currentPage, setCurrentPage] = useState(1);
+  const user = useAppSelector(useCurrentUser)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [priceSort, setPriceSort] = useState("none")
+  const [showFilters, setShowFilters] = useState(false)
+
   const { data, isLoading } = useGetAdminOrdersDataQuery(user?.email, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
     pollingInterval: 2000,
-  });
-  const [acceptOrder] = useAcceptOrderMutation();
-  const [cencelOrder] = useCencelOrderMutation();
-  const [deleteOrder] = useDeleteOrderMutation();
-
-  // console.log(data);
+  })
+  const [acceptOrder] = useAcceptOrderMutation()
+  const [cencelOrder] = useCencelOrderMutation()
+  const [deleteOrder] = useDeleteOrderMutation()
 
   // Modal state
-  const [selectedBuyer, setSelectedBuyer] = useState<TOrder | null>(null);
+  const [selectedBuyer, setSelectedBuyer] = useState<TOrder | null>(null)
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
         <RingLoader size={80} color="#1ca944" />
       </div>
-    );
+    )
   }
 
-  const orderData = data?.data;
+  const orderData = data?.data
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedReviews = orderData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-  const totalPages = Math.ceil(orderData.length / itemsPerPage);
+  // Filter and search logic
+  const filteredAndSortedOrders =
+    orderData
+      ?.filter((order: TOrder) => {
+        // Search filter
+        const matchesSearch =
+          order.product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.product.authorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.userInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.userInfo.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.transactionId.toLowerCase().includes(searchTerm.toLowerCase())
+
+        // Status filter
+        const matchesStatus = statusFilter === "all" || order.orderStatus === statusFilter
+
+        return matchesSearch && matchesStatus
+      })
+      ?.sort((a: TOrder, b: TOrder) => {
+        // Price sorting
+        if (priceSort === "low-to-high") {
+          return Number.parseFloat(a.product.price) - Number.parseFloat(b.product.price)
+        } else if (priceSort === "high-to-low") {
+          return Number.parseFloat(b.product.price) - Number.parseFloat(a.product.price)
+        }
+        return 0
+      }) || []
+
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginatedReviews = filteredAndSortedOrders.slice(startIndex, startIndex + itemsPerPage)
+  const totalPages = Math.ceil(filteredAndSortedOrders.length / itemsPerPage)
 
   const handleAcceptOrder = async (id: string) => {
     const bookInfo = {
       id: id,
-    };
+    }
 
     try {
-      const result = await acceptOrder(bookInfo).unwrap();
-      toast.success(result.message);
+      const result = await acceptOrder(bookInfo).unwrap()
+      toast.success(result.message)
     } catch (error) {
-      toast.error("Something Went Wrong");
+      toast.error("Something Went Wrong")
     }
-  };
+  }
 
   const handleCencelOrder = async (id: string) => {
     const bookInfo = {
       id: id,
-    };
+    }
 
     try {
-      const result = await cencelOrder(bookInfo).unwrap();
-      toast.success(result.message);
+      const result = await cencelOrder(bookInfo).unwrap()
+      toast.success(result.message)
     } catch (error) {
-      toast.error("Something Went Wrong");
+      toast.error("Something Went Wrong")
     }
-  };
+  }
 
   const handleDeleteOrder = async (id: string) => {
     const orderInfo = {
       id: id,
-    };
+    }
 
     try {
-      const result = await deleteOrder(orderInfo).unwrap();
-      toast.success(result.message);
+      const result = await deleteOrder(orderInfo).unwrap()
+      toast.success(result.message)
     } catch (error) {
-      toast.error("Something Went Wrong");
+      toast.error("Something Went Wrong")
     }
-  };
+  }
 
   const getStatusBadge = (status: string) => {
-    const baseClasses =
-      "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium";
+    const baseClasses = "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
 
     switch (status.toLowerCase()) {
       case "pending":
-        return `${baseClasses} bg-yellow-500/20 text-yellow-300 border border-yellow-500/30`;
+        return `${baseClasses} bg-yellow-500/20 text-yellow-300 border border-yellow-500/30`
       case "accepted":
-        return `${baseClasses} bg-green-500/20 text-green-300 border border-green-500/30`;
-      case "cancelled":
-        return `${baseClasses} bg-red-500/20 text-red-300 border border-red-500/30`;
+        return `${baseClasses} bg-green-500/20 text-green-300 border border-green-500/30`
+      case "cenceled":
+        return `${baseClasses} bg-red-500/20 text-red-300 border border-red-500/30`
       default:
-        return `${baseClasses} bg-gray-500/20 text-gray-300 border border-gray-500/30`;
+        return `${baseClasses} bg-gray-500/20 text-gray-300 border border-gray-500/30`
     }
-  };
+  }
+
+  // Get order statistics
+  const getOrderStats = () => {
+    const total = orderData?.length || 0
+    const pending = orderData?.filter((order: TOrder) => order.orderStatus === "pending").length || 0
+    const accepted = orderData?.filter((order: TOrder) => order.orderStatus === "accepted").length || 0
+    const cenceled = orderData?.filter((order: TOrder) => order.orderStatus === "cenceled").length || 0
+
+    return { total, pending, accepted, cenceled }
+  }
+
+  const stats = getOrderStats()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
@@ -115,9 +154,167 @@ const ManagingOrders = () => {
           <h2 className="text-4xl font-bold leading-tight bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             Order Management
           </h2>
-          <p className="mt-2 text-gray-300">
-            Manage and track all incoming orders
-          </p>
+          <p className="mt-2 text-gray-300">Manage and track all incoming orders</p>
+        </div>
+
+        {/* Order Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Eye className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">{stats.total}</div>
+                <div className="text-sm text-gray-400">Total Orders</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+                <XCircle className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">{stats.pending}</div>
+                <div className="text-sm text-gray-400">Pending</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                <Check className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">{stats.accepted}</div>
+                <div className="text-sm text-gray-400">Accepted</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">{stats.cenceled}</div>
+                <div className="text-sm text-gray-400">cenceled</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Search and Filter Section */}
+        <div className="mb-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            {/* Search Bar */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search by title, author, customer, or transaction..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Filter Toggle Button */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200"
+            >
+              <Filter className="w-4 h-4" />
+              <span>Filters</span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showFilters ? "rotate-180" : ""}`} />
+            </button>
+          </div>
+
+          {/* Filter Options */}
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Status Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-purple-300 mb-2">Filter by Status</label>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  >
+                    <option value="all" className="bg-gray-800">
+                      All Status
+                    </option>
+                    <option value="pending" className="bg-gray-800">
+                      Pending
+                    </option>
+                    <option value="accepted" className="bg-gray-800">
+                      Accepted
+                    </option>
+                    <option value="cenceled" className="bg-gray-800">
+                      cenceled
+                    </option>
+                  </select>
+                </div>
+
+                {/* Price Sort */}
+                <div>
+                  <label className="block text-sm font-medium text-purple-300 mb-2">Sort by Price</label>
+                  <select
+                    value={priceSort}
+                    onChange={(e) => setPriceSort(e.target.value)}
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  >
+                    <option value="none" className="bg-gray-800">
+                      No Sorting
+                    </option>
+                    <option value="low-to-high" className="bg-gray-800">
+                      Price: Low to High
+                    </option>
+                    <option value="high-to-low" className="bg-gray-800">
+                      Price: High to Low
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Active Filters Display */}
+              {(searchTerm || statusFilter !== "all" || priceSort !== "none") && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="text-sm text-purple-300">Active filters:</span>
+                  {searchTerm && (
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
+                      Search: "{searchTerm}"
+                    </span>
+                  )}
+                  {statusFilter !== "all" && (
+                    <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs">
+                      Status: {statusFilter}
+                    </span>
+                  )}
+                  {priceSort !== "none" && (
+                    <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs">
+                      Sort: {priceSort === "low-to-high" ? "Price ↑" : "Price ↓"}
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      setSearchTerm("")
+                      setStatusFilter("all")
+                      setPriceSort("none")
+                    }}
+                    className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-xs hover:bg-red-500/30 transition-colors"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="overflow-hidden bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 shadow-2xl">
@@ -147,10 +344,7 @@ const ManagingOrders = () => {
               </thead>
               <tbody className="divide-y divide-white/10">
                 {paginatedReviews?.map((item: TOrder) => (
-                  <tr
-                    key={item._id}
-                    className="hover:bg-white/5 transition-all duration-200 group"
-                  >
+                  <tr key={item._id} className="hover:bg-white/5 transition-all duration-200 group">
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-4">
                         <div className="relative w-16 h-16 overflow-hidden rounded-xl border-2 border-white/20 group-hover:border-purple-400/50 transition-colors duration-200">
@@ -165,16 +359,12 @@ const ManagingOrders = () => {
                           <div className="text-sm font-medium text-white group-hover:text-purple-300 transition-colors duration-200">
                             {item?.product?.title}
                           </div>
-                          <div className="text-xs text-gray-400 mt-1">
-                            {item?.product?.category}
-                          </div>
+                          <div className="text-xs text-gray-400 mt-1">{item?.product?.category}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-green-400">
-                        ৳ {item?.product?.price}
-                      </div>
+                      <div className="text-sm font-semibold text-green-400">৳ {item?.product?.price}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-white font-mono bg-white/10 px-2 py-1 rounded">
@@ -182,9 +372,7 @@ const ManagingOrders = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={getStatusBadge(item?.orderStatus)}>
-                        {item?.orderStatus}
-                      </span>
+                      <span className={getStatusBadge(item?.orderStatus)}>{item?.orderStatus}</span>
                     </td>
                     <td className="px-6 py-4">
                       {item?.orderStatus === "pending" ? (
@@ -246,11 +434,15 @@ const ManagingOrders = () => {
             />
           </div>
 
-          {orderData?.length === 0 && (
+          {filteredAndSortedOrders?.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-gray-400 text-lg">No orders found</div>
+              <div className="text-gray-400 text-lg">
+                {searchTerm || statusFilter !== "all" ? "No orders match your filters" : "No orders found"}
+              </div>
               <p className="text-gray-500 text-sm mt-2">
-                Orders will appear here when customers make purchases
+                {searchTerm || statusFilter !== "all"
+                  ? "Try adjusting your search or filter criteria"
+                  : "Orders will appear here when customers make purchases"}
               </p>
             </div>
           )}
@@ -260,10 +452,7 @@ const ManagingOrders = () => {
       {/* Enhanced Modal */}
       {selectedBuyer && (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setSelectedBuyer(null)}
-          ></div>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setSelectedBuyer(null)}></div>
           <div className="relative bg-gradient-to-br from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white rounded-2xl w-full max-w-md p-6 border border-white/20 shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
@@ -279,40 +468,24 @@ const ManagingOrders = () => {
 
             <div className="space-y-4">
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <label className="text-sm text-purple-300 font-medium">
-                  Customer Name
-                </label>
-                <p className="text-white mt-1 font-medium">
-                  {selectedBuyer?.userInfo.name}
-                </p>
+                <label className="text-sm text-purple-300 font-medium">Customer Name</label>
+                <p className="text-white mt-1 font-medium">{selectedBuyer?.userInfo.name}</p>
               </div>
 
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <label className="text-sm text-purple-300 font-medium">
-                  Email Address
-                </label>
-                <p className="text-white mt-1 font-mono text-sm">
-                  {selectedBuyer?.userInfo.email}
-                </p>
+                <label className="text-sm text-purple-300 font-medium">Email Address</label>
+                <p className="text-white mt-1 font-mono text-sm">{selectedBuyer?.userInfo.email}</p>
               </div>
 
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <label className="text-sm text-purple-300 font-medium">
-                  Transaction ID
-                </label>
-                <p className="text-white mt-1 font-mono text-sm break-all">
-                  {selectedBuyer?.transactionId}
-                </p>
+                <label className="text-sm text-purple-300 font-medium">Transaction ID</label>
+                <p className="text-white mt-1 font-mono text-sm break-all">{selectedBuyer?.transactionId}</p>
               </div>
 
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <label className="text-sm text-purple-300 font-medium">
-                  Order Status
-                </label>
+                <label className="text-sm text-purple-300 font-medium">Order Status</label>
                 <div className="mt-2">
-                  <span className={getStatusBadge(selectedBuyer?.orderStatus)}>
-                    {selectedBuyer?.orderStatus}
-                  </span>
+                  <span className={getStatusBadge(selectedBuyer?.orderStatus)}>{selectedBuyer?.orderStatus}</span>
                 </div>
               </div>
             </div>
@@ -329,7 +502,7 @@ const ManagingOrders = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ManagingOrders;
+export default ManagingOrders
