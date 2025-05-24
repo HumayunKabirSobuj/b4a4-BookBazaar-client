@@ -102,12 +102,20 @@ const AdminDashboardLayout: React.FC = () => {
                 </NavLink>
               ),
             },
-            {
-              key: "ManagingOrders",
+            
+          ],
+        },
+        {
+          key: "OrderManagement",
+          icon: <FaUserCog />,
+          label: "Order Management",
+          children: [
+           {
+              key: "ManageOrders",
               icon: <FaJediOrder />,
               label: (
-                <NavLink to={"/admin/dashboard/managing-orders"}>
-                  Managing Orders
+                <NavLink to={"/admin/dashboard/manage-orders"}>
+                  Manage Orders
                 </NavLink>
               ),
             },
