@@ -7,7 +7,13 @@ import { RingLoader } from "react-spinners";
 import { TOrder } from "../../types/TOrder";
 import { useGetAllUserDataQuery } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Pagination } from "../../components/Shared/Pagination";
+const itemsPerPage = 7;
+
 const AdminDashboard = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -45,6 +51,14 @@ const AdminDashboard = () => {
 
   const orderData = data?.data;
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedOrders = orderData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  console.log(paginatedOrders);
+  const totalPages = Math.ceil(orderData.length / itemsPerPage);
   //   console.log(orderData);
   const priceData = orderData?.map((item: TOrder) =>
     Number(item.product.price)
@@ -169,7 +183,7 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {orderData?.map((item: TOrder) => (
+                    {paginatedOrders?.map((item: TOrder) => (
                       <tr key={item._id}>
                         <td className="p-3">{item.transactionId}</td>
                         <td className="p-3">{item?.userInfo.name}</td>
@@ -183,6 +197,13 @@ const AdminDashboard = () => {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={(page) => setCurrentPage(page)}
+                />
               </div>
             </motion.main>
           </div>

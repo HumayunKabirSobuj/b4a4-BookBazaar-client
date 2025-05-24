@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { RingLoader } from "react-spinners";
 import {
   useDeleteBookMutation,
@@ -8,6 +10,8 @@ import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Pagination } from "../../../components/Shared/Pagination";
 
 type TBook = {
   authorEmail: string;
@@ -23,7 +27,11 @@ type TBook = {
   __v: number;
   _id: string;
 };
+const itemsPerPage = 7;
+
 const ManageProduct = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { data, isLoading } = useGetAllBookDataQuery(undefined, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
@@ -32,9 +40,6 @@ const ManageProduct = () => {
   });
   const [deleteBook] = useDeleteBookMutation();
   const user = useAppSelector(useCurrentUser);
-  
-
-  
 
   if (isLoading) {
     return (
@@ -45,22 +50,25 @@ const ManageProduct = () => {
   }
 
   const allBooksData = data?.data;
-  // console.log(allBooksData);
 
   const matchBook = allBooksData.filter(
     (item: TBook) => item?.authorEmail === user?.email
   );
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedProduct = matchBook.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+  const totalPages = Math.ceil(matchBook.length / itemsPerPage);
+
   const handleDeleteProduct = async (id: string) => {
-    // console.log(id);
     const bookInfo = {
       id: id,
     };
     try {
       const result = await deleteBook(bookInfo).unwrap();
-      // console.log(result);
       toast.success(result?.message, { duration: 2000 });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Something Went Wrong..", { duration: 2000 });
     }
@@ -68,108 +76,126 @@ const ManageProduct = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
-      <div className="container p-2 mx-auto sm:p-4  text-white">
-        <h2 className="mb-8 text-4xl font-semibold leading-tight text-center">
-          My Books
-        </h2>
-        <div className="">
-          <div className="">
-            <table className="min-w-full  h-full text-xs">
-              <colgroup>
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-              </colgroup>
-              <thead className="">
-                <tr className="text-left">
-                  <th className="p-3 text-base">Image</th>
-                  <th className="p-3 text-base">Title</th>
-                  <th className="p-3 text-base">category</th>
-                  <th className="p-3 text-base">price</th>
-                  <th className="p-3 text-base">Number Of Books</th>
-                  <th className="p-3 text-base">Action</th>
+      <div className="container p-4 mx-auto sm:p-6 text-white">
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl font-bold leading-tight bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            My Books
+          </h2>
+          <p className="mt-4 text-xl text-gray-300">
+            Manage your book collection
+          </p>
+        </div>
+
+        <div className="overflow-hidden bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 shadow-2xl">
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border-b border-white/10">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                    Image
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                    Title
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                    Stock
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
-              <tbody>
-                {matchBook.map((item: TBook) => (
-                  <tr key={item._id} className="border-b border-opacity-20 ">
-                    <td className="p-3">
-                      <div className="flex items-center justify-start">
-                        <div className="w-14 h-14  overflow-hidden ">
+              <tbody className="divide-y divide-white/10">
+                {paginatedProduct.map((item: TBook) => (
+                  <tr
+                    key={item._id}
+                    className="hover:bg-white/5 transition-all duration-200 group"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <div className="relative w-16 h-16 overflow-hidden rounded-xl border-2 border-white/20 group-hover:border-purple-400/50 transition-colors duration-200">
                           <img
-                            className="w-full h-full object-cover rounded-full"
-                            src={item?.imageUrl}
+                            className="w-full h-full object-cover"
+                            src={item?.imageUrl || "/placeholder.svg"}
+                            alt={item?.title}
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                         </div>
                       </div>
                     </td>
-                    <td className="p-3">
-                      <p>{item?.title}</p>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-white group-hover:text-purple-300 transition-colors duration-200">
+                        {item?.title}
+                      </div>
                     </td>
-                    <td className="p-3">
-                      <p>{item?.category}</p>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                        {item?.category}
+                      </span>
                     </td>
-                    <td className="p-3">
-                      <p>৳ {item?.price}</p>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-semibold text-green-400">
+                        ৳ {item?.price}
+                      </div>
                     </td>
-                    <td className="p-3 ">
-                      <p>{item?.numberOfBooks}</p>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <span className="text-sm text-white mr-2">
+                          {item?.numberOfBooks}
+                        </span>
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            item?.numberOfBooks > 0
+                              ? "bg-green-400"
+                              : "bg-red-400"
+                          }`}
+                        ></div>
+                      </div>
                     </td>
-                    {/* <td className="p-3 relative">
-                      <button
-                        onClick={() => toggleDropdown(item._id)}
-                        className="relative text-2xl"
-                      >
-                        <BsThreeDotsVertical />
-                      </button>
-                      {dropdownOpen === item._id && (
-                        <div className="absolute right-0 mt-2 w-48 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg ">
-                          <ul className="py-1 space-y-2">
-                            <li>
-                              <button className="text-center py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full">
-                                <Link
-                                  to={`/admin/dashboard/update-product/${item._id}`}
-                                
-                                >
-                                  Update
-                                </Link>
-                              </button>
-                            </li>
-                            {user && (
-                              <button
-                                onClick={() => handleDeleteProduct(item?._id)}
-                                className="text-center  py-2 bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white z-10 border border-gray-200 rounded-lg shadow-lg w-full"
-                              >
-                                Delete
-                              </button>
-                            )}
-                          </ul>
-                        </div>
-                      )}
-                    </td> */}
-                    <td className="pt-7 flex items-center justify-start gap-2">
-                      <Link
-                        to={`/admin/dashboard/update-product/${item._id}`}
-                        className="text-white bg-gradient-to-r from-purple-500 to-blue-500  hover:from-blue-500 hover:to-purple-500 focus:outline-none  text-xs py-1 px-3 rounded-full hover:bg-blue-600"
-                      >
-                        <span className="text-white">Update</span>
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteProduct(item?._id)}
-                        className="text-white bg-gradient-to-r from-purple-500 to-blue-500  hover:from-blue-500 hover:to-purple-500 focus:outline-none  text-xs py-1 px-3 rounded-full hover:bg-blue-600"
-                      >
-                        Delete
-                      </button>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-3">
+                        <Link
+                          to={`/admin/dashboard/update-product/${item._id}`}
+                          className="inline-flex items-center px-4 py-2 text-xs font-medium text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 hover:shadow-2xl transition duration-200 ease-in-out transform hover:scale-105"
+                        >
+                          Update
+                        </Link>
+
+                        <button
+                          onClick={() => handleDeleteProduct(item?._id)}
+                          className="inline-flex items-center px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-red-500 to-pink-600 rounded-lg hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-red-500/25"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <div className="mt-8">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
+
+          {matchBook.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-gray-400 text-lg">No books found</div>
+              <p className="text-gray-500 text-sm mt-2">
+                Start by adding your first book to the collection
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

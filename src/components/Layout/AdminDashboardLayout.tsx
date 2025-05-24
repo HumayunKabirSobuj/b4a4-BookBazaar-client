@@ -30,6 +30,9 @@ const AdminDashboardLayout: React.FC = () => {
   } = theme.useToken();
 
   const user = useAppSelector(useCurrentUser);
+
+  // console.log({ user });
+
   let sidebarItems;
 
   switch (user!.role) {
@@ -40,6 +43,18 @@ const AdminDashboardLayout: React.FC = () => {
           icon: <MdDashboard />,
           label: <NavLink to={"/user/dashboard"}>Dashboard</NavLink>,
         },
+        // {
+        //   key: "UserProfile",
+        //   icon: <MdDashboard />,
+        //   label: <NavLink to={"/user/profile"}>Profile</NavLink>,
+        // },
+
+        {
+          key: "UserProfile",
+          icon: <MdDashboard />,
+          label: <NavLink to={"/user/dashboard/profile"}>Profile</NavLink>,
+        },
+
         {
           key: "view-order-history",
           icon: <FaMoneyCheckDollar />,
@@ -57,6 +72,11 @@ const AdminDashboardLayout: React.FC = () => {
           key: "AdminDashboard",
           icon: <MdDashboard />,
           label: <NavLink to={"/admin/dashboard"}>Dashboard</NavLink>,
+        },
+         {
+          key: "UserProfile",
+          icon: <MdDashboard />,
+          label: <NavLink to={"/admin/dashboard/profile"}>Profile</NavLink>,
         },
         {
           key: "ProductManagement",
@@ -102,8 +122,8 @@ const AdminDashboardLayout: React.FC = () => {
               key: "DeactivatingAccounts",
               icon: <GiSplitCross />,
               label: (
-                <NavLink to={"/admin/dashboard/deactivating-accounts"}>
-                  Deactivating Accounts
+                <NavLink to={"/admin/dashboard/manage-users"}>
+                  Manage Users
                 </NavLink>
               ),
             },

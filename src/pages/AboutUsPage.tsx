@@ -68,7 +68,7 @@ const AboutUsPage = () => {
       : team.filter((member) => member.category === activeTab);
 
   return (
-    <div>
+    <div className="container mx-auto">
       <div>
         <div className="lg:mb-[140px] lg:px-10 md:px-8 px-5">
           <div>

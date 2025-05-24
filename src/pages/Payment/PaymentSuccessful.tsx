@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import image from "./Successfull.png";
 const PaymentSuccessful = () => {
   return (
-    <div>
+    <div className="container mx-auto">
       <div className="flex justify-center">
         <img src={image} alt="" className="h-[400px]" />
       </div>

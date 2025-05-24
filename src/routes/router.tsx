@@ -7,7 +7,6 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import AddProduct from "../pages/Dashboard/ProductManagement/AddProduct";
 import ManageProduct from "../pages/Dashboard/ProductManagement/ManageProduct";
 import ManagingOrders from "../pages/Dashboard/ProductManagement/ManagingOrders";
-import DeactivatingAccounts from "../pages/UserManagement/DeactivatingAccounts";
 import AllProducts from "../pages/Dashboard/ProductManagement/AllProducts";
 import ProductDetails from "../pages/ProductDetails";
 import PaymentSuccessful from "../pages/Payment/PaymentSuccessful";
@@ -19,6 +18,9 @@ import AboutUsPage from "../pages/AboutUsPage";
 import UpdateProduct from "../pages/Dashboard/ProductManagement/UpdateProduct";
 import AdminProtectedLayout from "../components/ProtectedLayouts/AdminProtectedLayout";
 import UserProtectedLayout from "../components/ProtectedLayouts/UserProtectedLayout";
+import AdminProfile from "../pages/Dashboard/AdminProfile/AdminProfile";
+import UserProfile from "../pages/Dashboard/UserProfile/UserProfile";
+import ManageUsers from "../pages/UserManagement/ManageUsers";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +73,10 @@ const router = createBrowserRouter([
         index: true,
         element: <AdminDashboard />,
       },
+       {
+        path: "profile",
+        element: <AdminProfile />,
+      },
       {
         path: "add-product",
         element: <AddProduct />,
@@ -84,8 +90,8 @@ const router = createBrowserRouter([
         element: <ManagingOrders />,
       },
       {
-        path: "deactivating-accounts",
-        element: <DeactivatingAccounts />,
+        path: "manage-users",
+        element: <ManageUsers />,
       },
       {
         path: "update-product/:id",
@@ -100,15 +106,24 @@ const router = createBrowserRouter([
         <Dashboard />
       </UserProtectedLayout>
     ),
+   
     children: [
       {
         index: true,
         element: <UserDashboard />,
       },
+      
       {
         path: "view-order-history",
         element: <ViewUserOrderHistory />,
       },
+
+
+      {
+        path: "profile",
+        element: <UserProfile />,
+      },
+
     ],
   },
 ]);

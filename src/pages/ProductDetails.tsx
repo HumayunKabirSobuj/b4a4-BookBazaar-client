@@ -66,7 +66,7 @@ const ProductDetails = () => {
     window.location.replace(result.url);
   };
   return (
-    <div>
+    <div className="container mx-auto">
       <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white p-6">
         {/* Book Details Container */}
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-6 mt-20">
