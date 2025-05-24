@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAppSelector } from "../../../redux/hooks";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
-import { RingLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 import { useAddBookMutation } from "../../../redux/features/productManagement/productApi";
 import { toast } from "sonner";
 
@@ -83,7 +83,7 @@ const AddProduct = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-        <RingLoader size={80} color="#1ca944" />
+        <ScaleLoader color="#1ca944" />
       </div>
     );
   }

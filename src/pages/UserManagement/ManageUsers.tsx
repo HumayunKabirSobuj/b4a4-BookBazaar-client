@@ -2,7 +2,6 @@
 
 "use client";
 
-import { RingLoader } from "react-spinners";
 import {
   useActiveAccountMutation,
   useChangeRoleMutation,
@@ -22,6 +21,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Pagination } from "../../components/Shared/Pagination";
+import { ScaleLoader } from "react-spinners";
 
 type TUser = {
   createdAt: string;
@@ -56,7 +56,7 @@ const ManageUsers = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-        <RingLoader size={80} color="#1ca944" />
+        <ScaleLoader color="#1ca944" />
       </div>
     );
   }

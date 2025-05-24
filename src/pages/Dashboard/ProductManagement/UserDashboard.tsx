@@ -4,8 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useGetUserOrdersDataQuery } from "../../../redux/features/OrderManagement/orderApi";
-import { RingLoader } from "react-spinners";
 import { TOrder } from "../../../types/TOrder";
+import { ScaleLoader } from "react-spinners";
 
 const UserDashboard = () => {
   const user = useAppSelector(useCurrentUser);
@@ -29,7 +29,7 @@ const UserDashboard = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-        <RingLoader size={80} color="#1ca944" />
+        <ScaleLoader color="#1ca944" />
       </div>
     );
   }

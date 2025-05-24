@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
 import axios from "axios";
-import { RingLoader } from "react-spinners";
+import {ScaleLoader } from "react-spinners";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -73,7 +73,7 @@ const Register = () => {
   if (loading) {
     return (
       <div className="container mx-auto flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-        <RingLoader size={80} color="#1ca944" />
+        <ScaleLoader color="#1ca944" />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { logout, useCurrentUser } from "../../redux/features/auth/authSlice";
 import { useGetAdminOrdersDataQuery } from "../../redux/features/OrderManagement/orderApi";
-import { RingLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 import { TOrder } from "../../types/TOrder";
 import { useGetAllUserDataQuery } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
@@ -44,7 +44,7 @@ const AdminDashboard = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-        <RingLoader size={80} color="#1ca944" />
+        <ScaleLoader color="#1ca944" />
       </div>
     );
   }

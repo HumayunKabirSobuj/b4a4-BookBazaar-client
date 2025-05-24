@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi";
-import { RingLoader } from "react-spinners";
+import {  ScaleLoader } from "react-spinners";
 import { useAppSelector } from "../redux/hooks";
 import { useCurrentUser } from "../redux/features/auth/authSlice";
 import { toast } from "sonner";
@@ -34,7 +34,7 @@ const ProductDetails = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-        <RingLoader size={80} color="#1ca944" />
+        <ScaleLoader color="#1ca944" />
       </div>
     );
   }
