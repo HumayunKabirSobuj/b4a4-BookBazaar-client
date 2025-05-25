@@ -38,7 +38,6 @@ const Navbar = () => {
 
   const products: TBook[] = useSelector((state: any) => state.cart.products); // or with type if you have RootState
 
-  console.log(products);
 
   const handleMakePayment = (item: any) => {
     // Handle individual item payment
@@ -48,12 +47,6 @@ const Navbar = () => {
     // or open a payment modal
   };
 
-  const handleDeleteItem = (itemId: any) => {
-    // Handle item deletion from cart
-    console.log("Deleting item:", itemId);
-    // You can dispatch a Redux action to remove the item
-    // dispatch(removeFromCart(itemId));
-  };
 
   return (
     <>
