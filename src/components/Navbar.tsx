@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -9,6 +11,9 @@ import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { removeFromCart } from "../redux/features/Cart/CartSlice";
+import { useAddOrderMutation } from "../redux/features/OrderManagement/orderApi";
+import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +22,16 @@ const Navbar = () => {
 
   const dispatch = useAppDispatch();
   const user = useAppSelector(useCurrentUser);
+  const [addOrder] = useAddOrderMutation();
+
+  const { data } = useGetAllBookDataQuery(undefined);
+
+  // console.log(data);
+
+  const allBooks = data?.data;
+  const availlableBooks = allBooks?.filter(
+    (book: TBook) => book.numberOfBooks > 0
+  );
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -38,15 +53,26 @@ const Navbar = () => {
 
   const products: TBook[] = useSelector((state: any) => state.cart.products); // or with type if you have RootState
 
+  // console.log(data);
 
-  const handleMakePayment = (item: any) => {
-    // Handle individual item payment
-    console.log("Making payment for:", item.title);
-    // You can add your payment logic here
-    // For example: navigate to payment page with item details
-    // or open a payment modal
+  const handleMakePayment = async (item: TBook, index: any) => {
+    try {
+      const productInfo = {
+        productId: item._id,
+        userInfo: {
+          ...user,
+        },
+      };
+
+      const result = await addOrder(productInfo).unwrap();
+
+      window.location.replace(result.url);
+      dispatch(removeFromCart(index));
+    } catch (error) {
+      // এখানে চাইলে ইউজারকে কোনো error notification দেখাতে পারিস
+      toast.error("Something went wrong. Please try again!");
+    }
   };
-
 
   return (
     <>
@@ -259,40 +285,61 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {products.map((item, index) => (
-                    <div
-                      key={item._id}
-                      className="flex items-center space-x-4 p-3 bg-gradient-to-r from-[#2B1E36] to-[#3B2E46] rounded-lg"
-                    >
-                      <img
-                        src={item?.imageUrl || "/placeholder.svg"}
-                        alt={item.title}
-                        className="w-12 h-16 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-sm">{item.title}</h3>
-                        <p className="text-[#FFD700] font-bold">
-                          ${item.price}
-                        </p>
+                
+                  {products.map((item, index) => {
+                    const isAvailable = availlableBooks?.some(
+                      (book:TBook) => book._id === item._id
+                    );
+
+                    return (
+                      <div
+                        key={index}
+                        className="flex items-center space-x-4 p-3 bg-gradient-to-r from-[#2B1E36] to-[#3B2E46] rounded-lg"
+                      >
+                        <img
+                          src={item?.imageUrl || "/placeholder.svg"}
+                          alt={item.title}
+                          className="w-12 h-16 object-cover rounded"
+                        />
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-sm">
+                            {item.title}
+                          </h3>
+                          <p className="text-[#FFD700] font-bold">
+                            ${item.price}
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-2">
+                          {/* Conditional Button */}
+                          {isAvailable ? (
+                            <button
+                              onClick={() => handleMakePayment(item, index)}
+                              className="text-black px-3 py-1 rounded font-semibold lg:text-3xl text-2xl"
+                              title="Make Payment"
+                            >
+                              <FaShoppingCart className="text-blue-500" />
+                            </button>
+                          ) : (
+                            <button
+                              className="text-white px-3 py-1 rounded font-semibold lg:text-sm text-xs bg-gray-500 cursor-not-allowed"
+                              title="Out of Stock"
+                              disabled
+                            >
+                              Out of Stock
+                            </button>
+                          )}
+
+                          {/* Delete Button */}
+                          <button
+                            onClick={() => dispatch(removeFromCart(index))}
+                            className="text-red-400 transition-colors duration-200 flex justify-center lg:text-3xl text-2xl"
+                          >
+                            <MdDelete />
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex flex-row items-center gap-2">
-                        {/* Make Payment Button */}
-                        <button
-                          onClick={() => handleMakePayment(item)}
-                          className=" text-black px-3 py-1 rounded  font-semibold  text-4xl"
-                        >
-                          <FaShoppingCart className="text-blue-500" />
-                        </button>
-                        {/* Delete Button */}
-                        <button
-                          onClick={() => dispatch(removeFromCart(index))}
-                          className="text-red-400 hover:text-red-300 transition-colors duration-200 flex justify-center text-4xl"
-                        >
-                          <MdDelete />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
