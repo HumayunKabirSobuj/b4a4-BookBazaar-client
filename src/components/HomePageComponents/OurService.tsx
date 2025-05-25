@@ -9,13 +9,9 @@ import { Pagination } from "swiper/modules";
 import card1 from "../../assets/images/HomePagePhoto/serviceMike.png";
 import card2 from "../../assets/images/HomePagePhoto/serviceBulb.png";
 import card3 from "../../assets/images/HomePagePhoto/serviceWeb.png";
-import card4 from "../../assets/images/HomePagePhoto/serviceECommerce.png";
 import card5 from "../../assets/images/HomePagePhoto/serviceGraphics.png";
 import card6 from "../../assets/images/HomePagePhoto/serviceMultimedia.png";
-import card7 from "../../assets/images/HomePagePhoto/serviceBuy.png";
-import card8 from "../../assets/images/HomePagePhoto/serviceMarchendise.png";
-import card9 from "../../assets/images/HomePagePhoto/serviceProxy.png";
-import card10 from "../../assets/images/HomePagePhoto/serviceAcademy.png";
+
 import card11 from "../../assets/images/HomePagePhoto/Frame (7).png";
 
 const OurService = () => {
