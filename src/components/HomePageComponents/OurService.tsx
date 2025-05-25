@@ -23,13 +23,8 @@ const OurService = () => {
     { img: card1, title: "Bestselling Books" },
     { img: card2, title: "Creative Writing Works" },
     { img: card3, title: "Web & Tech Books" },
-    { img: card4, title: "E-Commerce Guides" },
     { img: card5, title: "Graphic Design Inspirations" },
     { img: card6, title: "Multimedia & Video Resources" },
-    { img: card7, title: "Buy & Sell Books" },
-    { img: card8, title: "Merchandise Collection" },
-    { img: card9, title: "Proxy & Security" },
-    { img: card10, title: "Learning Academy" },
     { img: card11, title: "Special Offers" },
   ];
 
@@ -82,7 +77,7 @@ const OurService = () => {
       </div>
 
       {/* Grid View for Large Devices */}
-      <div className="hidden lg:grid md:grid-cols-2 grid-cols-1 gap-8">
+      <div className="hidden lg:grid lg:grid-cols-3 grid-cols-1 gap-8 my-10">
         {cards.map((card, index) => (
           <div
             key={index}
