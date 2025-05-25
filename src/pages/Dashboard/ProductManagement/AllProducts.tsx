@@ -5,7 +5,7 @@ import { ScaleLoader } from "react-spinners";
 import { Pagination } from "../../../components/Shared/Pagination";
 import { ChevronDown, Filter, Search } from "lucide-react";
 
-type TBook = {
+export type TBook = {
   authorEmail: string;
   authorName: string;
   category: string;
@@ -224,34 +224,40 @@ const AllProducts = () => {
                 {availlableBooks?.length ? (
                   paginatedBooks.map((item: TBook) => (
                     <div
-                      key={item._id}
-                      className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]  rounded-lg shadow-lg text-white"
+              key={item._id}
+              className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]  rounded-lg shadow-lg text-white my-2"
+            >
+              <div className="flex flex-col justify-between  h-full">
+                <div>
+                  <div className="flex items-center justify-center mb-4">
+                    <img
+                      src={item?.imageUrl}
+                      alt="Book Cover"
+                      className="w-full h-48 rounded-md shadow-md"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {item?.title.slice(0, 30)} ...
+                  </h3>
+                  <p className="text-gray-300 text-sm mb-4">
+                    {item.description.slice(0, 200)} ...
+                  </p>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold text-blue-400">
+                      ট {item?.price}
+                    </span>
+                    <Link
+                      to={`/product-details/${item._id}`}
+                      className="px-4 py-2 text-sm font-medium transition text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
                     >
-                      <div className="flex items-center justify-center mb-4">
-                        <img
-                          src={item?.imageUrl}
-                          alt="Book Cover"
-                          className="w-full h-48 rounded-md shadow-md"
-                        />
-                      </div>
-                      <h3 className="text-xl font-semibold mb-2">
-                        {item?.title.slice(0, 30)} ...
-                      </h3>
-                      <p className="text-gray-300 text-sm mb-4">
-                        {item.description.slice(0, 200)} ...
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-blue-400">
-                          ট {item?.price}
-                        </span>
-                        <Link
-                          to={`/product-details/${item._id}`}
-                          className="px-4 py-2 text-sm font-medium transition text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
-                        >
-                          View Details
-                        </Link>
-                      </div>
-                    </div>
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
                   ))
                 ) : (
                   <p className="text-gray-300">No books found.</p>

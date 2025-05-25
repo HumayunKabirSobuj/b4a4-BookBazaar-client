@@ -113,7 +113,7 @@ const Login = () => {
             onClick={adminLogin}
             className="w-full px-4 py-2 text-sm text-white font-medium border border-[#C16EFD] rounded-lg bg-[linear-gradient(105deg,_#6384FC_4.1%,_#C16EFD_54.8%,_#6384FC_92.38%)] flex items-center justify-center"
           >
-            Admin Credentials
+            Admin Login
           </button>
 
           {/* User Credentials Button */}
@@ -121,7 +121,7 @@ const Login = () => {
             onClick={userLogin}
             className="w-full px-4 py-2 text-sm text-white font-medium border border-[#C16EFD] rounded-lg bg-[linear-gradient(105deg,_#6384FC_4.1%,_#C16EFD_54.8%,_#6384FC_92.38%)] flex items-center justify-center"
           >
-            User Credentials
+            User Login
           </button>
         </div>
 

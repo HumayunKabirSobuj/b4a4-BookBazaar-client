@@ -94,6 +94,7 @@
 
 import { useState } from "react"
 import { ShoppingBag, Truck, RotateCcw, BookOpen } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const WhyChooseBookBazzar = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
@@ -150,12 +151,12 @@ const WhyChooseBookBazzar = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold px-8 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+              <Link to={"/all-product"} className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold px-8 py-4 rounded-3xl  text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex justify-center items-center">
                 Buy Now
-              </button>
-              <button className="border-2 border-purple-500 text-purple-300 hover:bg-purple-500 hover:text-white font-semibold px-8 py-4 rounded-full text-lg transition-all duration-300">
+              </Link>
+              <Link to={"/all-product"} className="border-2 border-purple-500 text-purple-300 hover:bg-purple-500 hover:text-white font-semibold px-8 py-4 rounded-3xl  text-lg transition-all duration-300 flex justify-center items-center">
                 Learn More
-              </button>
+              </Link>
             </div>
           </div>
 

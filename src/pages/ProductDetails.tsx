@@ -1,10 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi";
-import {  ScaleLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 import { useAppSelector } from "../redux/hooks";
 import { useCurrentUser } from "../redux/features/auth/authSlice";
 import { toast } from "sonner";
 import { useAddOrderMutation } from "../redux/features/OrderManagement/orderApi";
+import { addToCart } from "../redux/features/Cart/CartSlice";
+import { useDispatch, useSelector } from "react-redux";
 type TBook = {
   authorEmail: string;
   authorName: string;
@@ -24,12 +27,22 @@ const ProductDetails = () => {
   const { data, isLoading } = useGetAllBookDataQuery(undefined);
   const [addOrder] = useAddOrderMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   //   console.log(id);
 
   //   console.log(data.data);
   const bookData = data?.data?.find((item: TBook) => item._id === id);
 
   const user = useAppSelector(useCurrentUser);
+
+  const cartItem: TBook[] = useSelector((state: any) => state.cart.products); // or with type if you have RootState
+  const currentQuantityInCart = cartItem.filter(
+    (item) => item._id === bookData?._id
+  ).length;
+  const isOutOfStock =
+    bookData?.numberOfBooks !== 0 &&
+    currentQuantityInCart >= bookData?.numberOfBooks;
 
   if (isLoading) {
     return (
@@ -95,18 +108,35 @@ const ProductDetails = () => {
               {bookData?.numberOfBooks}
             </p>
 
-            {/* Price and Action */}
-            <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-blue-400">
-                ৳ {bookData?.price}
-              </span>
+            {user && user.email !== bookData.authorEmail && (
               <button
-                onClick={() => handleProceedToBuy(bookData?._id)}
-                className="px-4 py-2  text-sm font-medium transition text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
+                onClick={() => dispatch(addToCart(bookData))}
+                disabled={isOutOfStock}
+                className={`px-4 py-2 text-sm font-medium transition rounded-lg focus:outline-none
+    ${
+      isOutOfStock
+        ? "bg-gray-400 cursor-not-allowed"
+        : "text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500"
+    }
+  `}
               >
-                Proceed To Buy
+                {isOutOfStock ? "Out of Stock" : "Add To Cart"}
               </button>
-            </div>
+            )}
+            {user && user.email === bookData.authorEmail && (
+              <button
+                className={`px-4 py-2 text-sm font-medium transition rounded-lg focus:outline-none text-white bg-gray-400 cursor-not-allowed`}
+              >
+                You can't add your own product
+              </button>
+            )}
+            {!user && (
+              <button
+                className={`px-4 py-2 text-sm font-medium transition rounded-lg focus:outline-none text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500`}
+              >
+                <Link to={"/login"}>Login</Link>
+              </button>
+            )}
           </div>
         </div>
       </div>
