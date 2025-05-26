@@ -1,4 +1,3 @@
-
 import { Link, useParams } from "react-router-dom";
 import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi";
 import { ScaleLoader } from "react-spinners";
@@ -6,6 +5,7 @@ import { useAppSelector } from "../redux/hooks";
 import { useCurrentUser } from "../redux/features/auth/authSlice";
 import { addToCart } from "../redux/features/Cart/CartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 type TBook = {
   authorEmail: string;
@@ -41,8 +41,7 @@ const ProductDetails = () => {
     (item) => item._id === bookData?._id
   ).length;
 
-  const isOutOfStock =
-    (bookData?.numberOfBooks ?? 0) <= currentQuantityInCart;
+  const isOutOfStock = (bookData?.numberOfBooks ?? 0) <= currentQuantityInCart;
 
   if (isLoading) {
     return (
@@ -81,7 +80,12 @@ const ProductDetails = () => {
 
             {user && user.email !== bookData?.authorEmail && (
               <button
-                onClick={() => dispatch(addToCart(bookData))}
+                onClick={() => {
+                  dispatch(addToCart(bookData));
+                  toast.success("Book added to cart!", {
+                    description: "Check your cart to proceed to checkout",
+                  });
+                }}
                 disabled={isOutOfStock}
                 className={`px-4 py-2 text-sm font-medium transition rounded-lg focus:outline-none ${
                   isOutOfStock
@@ -94,9 +98,7 @@ const ProductDetails = () => {
             )}
 
             {user && user.email === bookData?.authorEmail && (
-              <button
-                className="px-4 py-2 text-sm font-medium transition rounded-lg focus:outline-none text-white bg-gray-400 cursor-not-allowed"
-              >
+              <button className="px-4 py-2 text-sm font-medium transition rounded-lg focus:outline-none text-white bg-gray-400 cursor-not-allowed">
                 You can't add your own product
               </button>
             )}

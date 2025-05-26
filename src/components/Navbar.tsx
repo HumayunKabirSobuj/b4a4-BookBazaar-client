@@ -57,6 +57,9 @@ const Navbar = () => {
 
   const handleMakePayment = async (item: TBook, index: any) => {
     try {
+      toast.loading("Processing your payment. Please wait...", {
+        duration: 2000, // 2 seconds in milliseconds
+      });
       const productInfo = {
         productId: item._id,
         userInfo: {
@@ -248,7 +251,7 @@ const Navbar = () => {
       {/* Cart Modal */}
       {isCartModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center py-4">
-          <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white rounded-lg shadow-xl w-full md:w-2/3 max-h-[90vh] overflow-hidden">
+          <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white rounded-lg shadow-xl w-full md:max-w-2xl max-h-[90vh] overflow-hidden">
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-600">
               <h2 className="text-2xl font-bold text-[#FFD700]">
@@ -285,10 +288,9 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                
                   {products.map((item, index) => {
                     const isAvailable = availlableBooks?.some(
-                      (book:TBook) => book._id === item._id
+                      (book: TBook) => book._id === item._id
                     );
 
                     return (
@@ -331,7 +333,10 @@ const Navbar = () => {
 
                           {/* Delete Button */}
                           <button
-                            onClick={() => dispatch(removeFromCart(index))}
+                            onClick={() => {
+                              dispatch(removeFromCart(index));
+                              toast.success("Book Remove Successfully..")
+                            }}
                             className="text-red-400 transition-colors duration-200 flex justify-center lg:text-3xl text-2xl"
                           >
                             <MdDelete />

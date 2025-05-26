@@ -55,7 +55,7 @@ const AboutUsPage = () => {
       img: person5,
     },
     {
-      name: "Robert Fox",
+      name: "Ayesha Haque",
       role: "Senior Author",
       category: "Senior Author",
       img: person6,
@@ -137,25 +137,25 @@ const AboutUsPage = () => {
               </div>
 
               {/* Static Grid for larger devices */}
-              <div className="hidden lg:grid lg:grid-cols-3 gap-8">
+              <div className="hidden lg:grid lg:grid-cols-3 lg:gap-10">
                 {filteredTeam.map((member, index) => (
                   <div
                     key={index}
-                    className="relative md:w-[400px] rounded-2xl bg-gray-100 overflow-hidden shadow-lg border-2 border-blue-500 p-4"
+                    className="relative w-full rounded-2xl bg-gray-100 overflow-hidden shadow-lg border-2 border-blue-500 "
                   >
                     <div className="relative">
                       <img
                         src={member.img}
                         alt={member.name}
-                        className="w-full h-auto rounded-2xl"
+                        className="w-full h-[350px] rounded-2xl"
                       />
                     </div>
-                    <div className="absolute bottom-4 left-4 bg-gray-900 text-white p-3 rounded-lg flex items-center gap-2 shadow-md">
+                    <div className="absolute bottom-4 left-4 text-green-400  rounded-lg flex items-center gap-2 shadow-md">
                       <div>
-                        <h2 className="lg:text-2xl font-semibold text-white">
+                        <h2 className="lg:text-2xl font-semibold text-green-400">
                           {member.name}
                         </h2>
-                        <p className="text-[#F3F3F4] text-lg opacity-70">
+                        <p className="text-green-400 text-lg opacity-70">
                           {member.role}
                         </p>
                       </div>
@@ -168,7 +168,7 @@ const AboutUsPage = () => {
         </div>
       </div>
       <div>
-        <div className=" p-8 md:p-12 lg:p-16 rounded-lg flex flex-col lg:flex-row items-center justify-between gap-10 lg:mb-[140px]">
+        <div className=" px-8 md:px-12 lg:px-16 md:pb-12 lg:lg:pb-16 rounded-lg flex flex-col lg:flex-row items-center justify-between gap-10 ">
           {/* Left Side Content */}
           <div className="rounded-[30px] h-[350px] bg-gradient-to-r from-[#5C258D] to-[#4389A2] shadow-lg text-white flex-1 lg:w-full lg:w-[343px w-full py-5">
             {/* Card Content */}
@@ -179,7 +179,7 @@ const AboutUsPage = () => {
 
             {/* Buttons or Actions */}
 
-            <div className="flex items-center justify-evenly">
+            <div className="flex items-center justify-evenly pt-8">
               <img src={icon1} alt="" />
               <img src={icon2} alt="" />
               <img src={icon3} alt="" />

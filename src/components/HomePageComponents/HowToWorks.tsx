@@ -167,7 +167,7 @@ const HowToWorks = () => {
 
         {/* Call to Action */}
         <div className="text-center mt-16">
-          <Link to={"/all-product"} className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold px-4 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <Link to={"/all-product"} className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold px-4 py-3 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
             Get Started Today
           </Link>
         </div>

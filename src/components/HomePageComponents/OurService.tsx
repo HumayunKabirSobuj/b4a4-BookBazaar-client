@@ -25,12 +25,12 @@ const OurService = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
-      <div className="space-y-4 pb-12 lg:pt-28 pt-5">
-        <h1 className="lg:text-6xl text-[28px] font-semibold text-white text-center">
+    <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] rounded-3xl">
+      <div className="space-y-4 pt-10 pb-10">
+        <h1 className="lg:text-5xl text-[28px] font-semibold text-white text-center">
           Our Book Collection
         </h1>
-        <p className="text-[#F3F3F4] lg:text-lg text-[14px] text-center">
+        <p className="text-[#F3F3F4] lg:text-lg text-[14px] text-center pt-4">
           Step into a world of captivating stories and knowledge, <br /> where finding
           your next favorite book is
           <br />

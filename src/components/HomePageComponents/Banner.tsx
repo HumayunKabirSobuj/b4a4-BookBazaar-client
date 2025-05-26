@@ -26,17 +26,17 @@ export default function Banner() {
         className="mySwiper"
       >
         <SwiperSlide>
-          <div className="h-[450px] w-full bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] ">
+          <div className="h-[70vh] w-full bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] ">
             <img src="http://res.cloudinary.com/dn7oeugls/image/upload/v1737968509/jguhl6gfmtpjsxbavsjz.jpg" alt=""  className="object-cover py-4 rounded-3xl"/>
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="h-[450px] w-full bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
+          <div className="h-[70vh] w-full bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
             <img src="http://res.cloudinary.com/dn7oeugls/image/upload/v1737968720/q6nq7tcpnknowycxyj2y.jpg" alt=""  className="object-cover py-4 rounded-3xl"/>
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="h-[450px] w-full bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
+          <div className="h-[70vh] w-full bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
             <img src="http://res.cloudinary.com/dn7oeugls/image/upload/v1737968841/o33wem8sqeqcziqbjkea.jpg" alt=""  className="object-cover py-4 rounded-3xl"/>
           </div>
         </SwiperSlide>

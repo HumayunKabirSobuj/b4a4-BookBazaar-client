@@ -43,7 +43,7 @@ const FAQSection = () => {
   ];
 
   return (
-    <div className=" text-white p-8 min-h-screen lg:pb-[100px] bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
+    <div className=" text-white px-8 min-h-screen  bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] mt-10 rounded-3xl mb-10">
       {/* Section Title */}
 
       <div className="flex flex-col md:flex-row gap-4">
@@ -51,7 +51,7 @@ const FAQSection = () => {
 
         <div className="flex-1 w-full  space-y-4">
           <div>
-            <h1 className="lg:text-5xl font-semibold">
+            <h1 className="lg:text-5xl font-semibold mt-8 mb-10">
               Got Questions? <br /> We have got Answers
             </h1>
           </div>
