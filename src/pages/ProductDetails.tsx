@@ -106,7 +106,7 @@ const ProductDetails = () => {
             {!user && (
               <Link to="/login">
                 <button className="px-4 py-2 text-sm font-medium transition rounded-lg focus:outline-none text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500">
-                  Login
+                  Add To Cart
                 </button>
               </Link>
             )}

@@ -287,7 +287,7 @@ const Navbar = () => {
                         />
                         <div className="flex-1">
                           <h3 className="font-semibold text-sm">{item.title}</h3>
-                          <p className="text-[#FFD700] font-bold">${item.price}</p>
+                          <p className="text-[#FFD700] font-bold">ট {item.price}</p>
                         </div>
                         <div className="flex flex-row items-center gap-2">
                           {/* Conditional Button */}
