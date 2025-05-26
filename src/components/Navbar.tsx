@@ -1,57 +1,56 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { logout, useCurrentUser } from "../redux/features/auth/authSlice";
-import { TBook } from "../pages/Dashboard/ProductManagement/AllProducts";
-import { useSelector } from "react-redux";
-import { MdDelete } from "react-icons/md";
-import { FaShoppingCart } from "react-icons/fa";
-import { removeFromCart } from "../redux/features/Cart/CartSlice";
-import { useAddOrderMutation } from "../redux/features/OrderManagement/orderApi";
-import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi";
-import { toast } from "sonner";
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../redux/hooks"
+import { logout, useCurrentUser } from "../redux/features/auth/authSlice"
+import type { TBook } from "../pages/Dashboard/ProductManagement/AllProducts"
+import { useSelector } from "react-redux"
+import { MdDelete } from "react-icons/md"
+import { FaShoppingCart } from "react-icons/fa"
+import { removeFromCart } from "../redux/features/Cart/CartSlice"
+import { useAddOrderMutation } from "../redux/features/OrderManagement/orderApi"
+import { useGetAllBookDataQuery } from "../redux/features/productManagement/productApi"
+import { toast } from "sonner"
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false)
 
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(useCurrentUser);
-  const [addOrder] = useAddOrderMutation();
+  const dispatch = useAppDispatch()
+  const user = useAppSelector(useCurrentUser)
+  const [addOrder] = useAddOrderMutation()
 
-  const { data } = useGetAllBookDataQuery(undefined);
+  const { data } = useGetAllBookDataQuery(undefined)
 
   // console.log(data);
 
-  const allBooks = data?.data;
-  const availlableBooks = allBooks?.filter(
-    (book: TBook) => book.numberOfBooks > 0
-  );
+  const allBooks = data?.data
+  const availlableBooks = allBooks?.filter((book: TBook) => book.numberOfBooks > 0)
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+    setIsMenuOpen(!isMenuOpen)
+  }
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+    setIsDropdownOpen(!isDropdownOpen)
+  }
 
   const toggleCartModal = () => {
-    setIsCartModalOpen(!isCartModalOpen);
-  };
+    setIsCartModalOpen(!isCartModalOpen)
+  }
 
   const handleLogout = () => {
-    dispatch(logout());
-  };
+    dispatch(logout())
+  }
 
   // Sample cart items - replace with your actual cart data
 
-  const products: TBook[] = useSelector((state: any) => state.cart.products); // or with type if you have RootState
+  const products: TBook[] = useSelector((state: any) => state.cart.products) // or with type if you have RootState
 
   // console.log(data);
 
@@ -59,23 +58,23 @@ const Navbar = () => {
     try {
       toast.loading("Processing your payment. Please wait...", {
         duration: 2000, // 2 seconds in milliseconds
-      });
+      })
       const productInfo = {
         productId: item._id,
         userInfo: {
           ...user,
         },
-      };
+      }
 
-      const result = await addOrder(productInfo).unwrap();
+      const result = await addOrder(productInfo).unwrap()
 
-      window.location.replace(result.url);
-      dispatch(removeFromCart(index));
+      window.location.replace(result.url)
+      dispatch(removeFromCart(index))
     } catch (error) {
       // এখানে চাইলে ইউজারকে কোনো error notification দেখাতে পারিস
-      toast.error("Something went wrong. Please try again!");
+      toast.error("Something went wrong. Please try again!")
     }
-  };
+  }
 
   return (
     <>
@@ -177,11 +176,7 @@ const Navbar = () => {
 
             {/* Mobile Menu Toggle */}
             <div className="md:hidden">
-              <button
-                onClick={toggleMenu}
-                className="text-2xl"
-                aria-label="Toggle Menu"
-              >
+              <button onClick={toggleMenu} className="text-2xl" aria-label="Toggle Menu">
                 {isMenuOpen ? "✖" : "☰"}
               </button>
             </div>
@@ -194,10 +189,7 @@ const Navbar = () => {
             <Link to="/" className="block text-lg hover:text-[#FFD700]">
               Home
             </Link>
-            <Link
-              to="/all-product"
-              className="block text-lg hover:text-[#FFD700]"
-            >
+            <Link to="/all-product" className="block text-lg hover:text-[#FFD700]">
               All Products
             </Link>
             <Link to="/about-us" className="block text-lg hover:text-[#FFD700]">
@@ -230,16 +222,10 @@ const Navbar = () => {
                   </svg>
                   <span>Cart ({products.length})</span>
                 </button>
-                <Link
-                  to={`/${user.role}/dashboard`}
-                  className="block text-lg hover:text-[#FFD700]"
-                >
+                <Link to={`/${user.role}/dashboard`} className="block text-lg hover:text-[#FFD700]">
                   Dashboard
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left text-lg hover:text-[#FFD700]"
-                >
+                <button onClick={handleLogout} className="block w-full text-left text-lg hover:text-[#FFD700]">
                   Logout
                 </button>
               </>
@@ -254,9 +240,7 @@ const Navbar = () => {
           <div className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white rounded-lg shadow-xl w-full md:max-w-2xl max-h-[90vh] overflow-hidden">
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-600">
-              <h2 className="text-2xl font-bold text-[#FFD700]">
-                Shopping Cart
-              </h2>
+              <h2 className="text-2xl font-bold text-[#FFD700]">Shopping Cart</h2>
               <button
                 onClick={toggleCartModal}
                 className="text-2xl hover:text-[#FFD700] transition-colors duration-200"
@@ -289,9 +273,7 @@ const Navbar = () => {
               ) : (
                 <div className="space-y-4">
                   {products.map((item, index) => {
-                    const isAvailable = availlableBooks?.some(
-                      (book: TBook) => book._id === item._id
-                    );
+                    const isAvailable = availlableBooks?.some((book: TBook) => book._id === item._id)
 
                     return (
                       <div
@@ -304,12 +286,8 @@ const Navbar = () => {
                           className="w-12 h-16 object-cover rounded"
                         />
                         <div className="flex-1">
-                          <h3 className="font-semibold text-sm">
-                            {item.title}
-                          </h3>
-                          <p className="text-[#FFD700] font-bold">
-                            ${item.price}
-                          </p>
+                          <h3 className="font-semibold text-sm">{item.title}</h3>
+                          <p className="text-[#FFD700] font-bold">${item.price}</p>
                         </div>
                         <div className="flex flex-row items-center gap-2">
                           {/* Conditional Button */}
@@ -334,7 +312,7 @@ const Navbar = () => {
                           {/* Delete Button */}
                           <button
                             onClick={() => {
-                              dispatch(removeFromCart(index));
+                              dispatch(removeFromCart(index))
                               toast.success("Book Remove Successfully..")
                             }}
                             className="text-red-400 transition-colors duration-200 flex justify-center lg:text-3xl text-2xl"
@@ -343,8 +321,52 @@ const Navbar = () => {
                           </button>
                         </div>
                       </div>
-                    );
+                    )
                   })}
+                </div>
+              )}
+              {products.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-gray-600">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-lg font-semibold">Total:</span>
+                    <span className="text-2xl font-bold text-[#FFD700]">
+                      ${products.reduce((total, item) => total + Number.parseFloat(item.price), 0).toFixed(2)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      // Calculate total for available items only
+                      const availableItems = products.filter((item) =>
+                        availlableBooks?.some((book: TBook) => book._id === item._id),
+                      )
+
+                      if (availableItems.length === 0) {
+                        toast.error("No available items in cart for checkout")
+                        return
+                      }
+
+                      // You can implement bulk payment logic here
+                      toast.info(`Processing ${availableItems.length} items for checkout...`)
+
+                      // For now, we'll process the first available item as an example
+                      // You can modify this to handle bulk payments
+                      if (availableItems.length > 0) {
+                        const firstAvailableIndex = products.findIndex((item) =>
+                          availableItems.some((availableItem) => availableItem._id === item._id),
+                        )
+                        handleMakePayment(availableItems[0], firstAvailableIndex)
+                      }
+                    }}
+                    className="w-full bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black font-bold py-3 px-4 rounded-lg hover:from-[#FFA500] hover:to-[#FFD700] transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={
+                      products.filter((item) => availlableBooks?.some((book: TBook) => book._id === item._id))
+                        .length === 0
+                    }
+                  >
+                    Checkout All Available Items (
+                    {products.filter((item) => availlableBooks?.some((book: TBook) => book._id === item._id)).length}{" "}
+                    items)
+                  </button>
                 </div>
               )}
             </div>
@@ -352,7 +374,7 @@ const Navbar = () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
