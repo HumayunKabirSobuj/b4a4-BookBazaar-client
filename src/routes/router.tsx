@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
-import Home from "../pages/Home";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import AddProduct from "../pages/Dashboard/ProductManagement/AddProduct";
 import ManageProduct from "../pages/Dashboard/ProductManagement/ManageProduct";
@@ -21,6 +20,7 @@ import UserProtectedLayout from "../components/ProtectedLayouts/UserProtectedLay
 import AdminProfile from "../pages/Dashboard/AdminProfile/AdminProfile";
 import UserProfile from "../pages/Dashboard/UserProfile/UserProfile";
 import ManageUsers from "../pages/UserManagement/ManageUsers";
+import Home from "../pages/Home";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home></Home>,
+        element: <Home/>,
       },
       {
         path: "/all-product",
