@@ -3,7 +3,7 @@ import { useGetAllBookDataQuery } from "../../../redux/features/productManagemen
 import { Link } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
 import { Pagination } from "../../../components/Shared/Pagination";
-import { ChevronDown, Filter, Search } from "lucide-react";
+import { ArrowRight, ChevronDown, Filter, Search, Star } from "lucide-react";
 
 export type TBook = {
   authorEmail: string;
@@ -227,38 +227,69 @@ const AllProducts = () => {
               key={item._id}
               className="bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] rounded-lg shadow-lg text-white my-2"
             >
-              <div className="flex flex-col justify-between h-full w-full">
-                <div>
-                  <div className="relative flex items-center justify-center mb-4">
+               <div
+                  key={item._id}
+                  className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 rounded-3xl overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+                >
+                  {/* Book Image */}
+                  <div className="relative overflow-hidden">
                     <img
-                      src={item?.imageUrl}
+                      src={
+                        item?.imageUrl ||
+                        "/placeholder.svg?height=256&width=256"
+                      }
                       alt="Book Cover"
-                      className="w-full h-48 rounded-md shadow-md"
+                      className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <span className="absolute top-2 right-2 bg-blue-500 text-white text-sm font-bold px-2 py-1 rounded shadow-md">
-                      ট {item?.price}
-                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                    {/* Price Badge */}
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                      ৳{item?.price}
+                    </div>
+
+                    {/* Rating */}
+                    <div className="absolute top-4 left-4 flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                      
+                    </div>
                   </div>
-                  <div className="px-2">
-                    <h3 className="text-xl font-semibold mb-2">
-                      {item?.title.slice(0, 30)} ...
+
+                  {/* Book Info */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-2 overflow-hidden">
+                      <span className="block truncate">
+                        {item?.title.length > 30
+                          ? `${item?.title.slice(0, 30)}...`
+                          : item?.title}
+                      </span>
                     </h3>
-                    <p className="text-gray-300 text-sm mb-4">
-                      {item.description.slice(0, 200)} ...
+                    <p className="text-gray-300 text-sm mb-4 overflow-hidden">
+                      <span
+                        className="block"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: "vertical",
+                        }}
+                      >
+                        {item.description.length > 100
+                          ? `${item.description.slice(0, 100)}...`
+                          : item.description}
+                      </span>
                     </p>
-                  </div>
-                </div>
-                <div>
-                  <div className="w-full px-4 pb-4">
+
                     <Link
                       to={`/product-details/${item._id}`}
-                      className="w-full block text-center px-4 py-2 text-sm font-medium transition text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none "
+                      className="w-full block text-center px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl transition-all duration-300 hover:from-purple-700 hover:to-blue-700 hover:shadow-lg group"
                     >
-                      View Details
+                      <span className="flex items-center justify-center gap-2">
+                        View Details
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </span>
                     </Link>
                   </div>
                 </div>
-              </div>
             </div>
                   ))
                 ) : (

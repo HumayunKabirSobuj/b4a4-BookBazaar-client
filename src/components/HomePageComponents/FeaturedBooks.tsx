@@ -79,9 +79,7 @@ const FeaturedBooks = () => {
                     {/* Rating */}
                     <div className="absolute top-4 left-4 flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-white text-sm font-medium">
-                        4.8
-                      </span>
+                     
                     </div>
                   </div>
 
