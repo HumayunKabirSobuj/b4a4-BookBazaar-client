@@ -119,10 +119,10 @@ const Navbar = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full opacity-0 group-hover:opacity-30 transition-opacity"></div>
                 </Link>
                 <Link
-                  to="/about-us"
+                  to="/contact"
                   className="px-3 py-2 sm:px-4 sm:py-2 lg:px-6 lg:py-3 text-sm sm:text-base text-white font-semibold rounded-full hover:bg-gradient-to-r hover:from-purple-500/40 hover:to-blue-500/40 transition-all duration-300 relative group"
                 >
-                  <span className="relative z-10">About</span>
+                  <span className="relative z-10">Contact Us</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full opacity-0 group-hover:opacity-30 transition-opacity"></div>
                 </Link>
               </div>

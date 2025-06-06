@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+
+
 "use client"
 
 import { useState } from "react"
@@ -12,9 +14,9 @@ import {
   useGetAdminOrdersDataQuery,
 } from "../../../redux/features/OrderManagement/orderApi"
 import { useAppSelector } from "../../../redux/hooks"
-import { TOrder } from "../../../types/TOrder"
+import type { TOrder } from "../../../types/TOrder"
 import { toast } from "sonner"
-import { X, Eye, Check, XCircle, Trash2, Search, Filter, ChevronDown } from 'lucide-react'
+import { X, Eye, Check, XCircle, Trash2, Search, Filter, ChevronDown, AlertTriangle } from "lucide-react"
 import { Pagination } from "../../../components/Shared/Pagination"
 const itemsPerPage = 7
 
@@ -25,6 +27,18 @@ const ManagingOrders = () => {
   const [statusFilter, setStatusFilter] = useState("all")
   const [priceSort, setPriceSort] = useState("none")
   const [showFilters, setShowFilters] = useState(false)
+
+  // Confirmation modals
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{ show: boolean; orderId: string; title: string }>({
+    show: false,
+    orderId: "",
+    title: "",
+  })
+  const [cancelConfirmation, setcancelConfirmation] = useState<{ show: boolean; orderId: string; title: string }>({
+    show: false,
+    orderId: "",
+    title: "",
+  })
 
   const { data, isLoading } = useGetAdminOrdersDataQuery(user?.email, {
     refetchOnFocus: true,
@@ -41,8 +55,9 @@ const ManagingOrders = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
-        <ScaleLoader color="#1ca944" />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
+        <ScaleLoader color="#8b5cf6" />
+        <p className="mt-4 text-white/70 text-sm">Loading orders...</p>
       </div>
     )
   }
@@ -88,35 +103,73 @@ const ManagingOrders = () => {
 
     try {
       const result = await acceptOrder(bookInfo).unwrap()
-      toast.success(result.message)
+      toast.success(result.message, {
+        description: "Order has been accepted successfully",
+        duration: 3000,
+      })
     } catch (error) {
-      toast.error("Something Went Wrong")
+      toast.error("Something Went Wrong", {
+        description: "Failed to accept order. Please try again.",
+        duration: 3000,
+      })
     }
   }
 
-  const handleCencelOrder = async (id: string) => {
+  const handleCancelClick = (id: string, title: string) => {
+    setcancelConfirmation({
+      show: true,
+      orderId: id,
+      title: title,
+    })
+  }
+
+  const handleConfirmCancel = async () => {
     const bookInfo = {
-      id: id,
+      id: cancelConfirmation.orderId,
     }
 
     try {
       const result = await cencelOrder(bookInfo).unwrap()
-      toast.success(result.message)
+      toast.success(result.message, {
+        description: "Order has been canceled successfully",
+        duration: 3000,
+      })
+      setcancelConfirmation({ show: false, orderId: "", title: "" })
     } catch (error) {
-      toast.error("Something Went Wrong")
+      toast.error("Something Went Wrong", {
+        description: "Failed to cancel order. Please try again.",
+        duration: 3000,
+      })
+      setcancelConfirmation({ show: false, orderId: "", title: "" })
     }
   }
 
-  const handleDeleteOrder = async (id: string) => {
+  const handleDeleteClick = (id: string, title: string) => {
+    setDeleteConfirmation({
+      show: true,
+      orderId: id,
+      title: title,
+    })
+  }
+
+  const handleConfirmDelete = async () => {
     const orderInfo = {
-      id: id,
+      id: deleteConfirmation.orderId,
     }
 
     try {
       const result = await deleteOrder(orderInfo).unwrap()
-      toast.success(result.message)
+      toast.success(result.message, {
+        description: "Order has been deleted successfully",
+        duration: 3000,
+      })
+      setDeleteConfirmation({ show: false, orderId: "", title: "" })
     } catch (error) {
-      toast.error("Something Went Wrong")
+      toast.error("Something Went Wrong", {
+        description: "Failed to delete order. Please try again.",
+        duration: 3000,
+      })
+      setDeleteConfirmation({ show: false, orderId: "", title: "" })
     }
   }
 
@@ -149,7 +202,10 @@ const ManagingOrders = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31]">
-      <div className="container p-4 mx-auto sm:p-6 text-white">
+      {/* Background Pattern */}
+      
+      
+      <div className="container p-4 mx-auto sm:p-6 text-white relative z-10">
         <div className="mb-8 text-center">
           <h2 className="text-4xl font-bold leading-tight bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             Order Management
@@ -158,8 +214,8 @@ const ManagingOrders = () => {
         </div>
 
         {/* Order Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-purple-500/30 transition-colors duration-300 hover:shadow-lg hover:shadow-purple-500/10">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Eye className="w-6 h-6 text-white" />
@@ -171,7 +227,7 @@ const ManagingOrders = () => {
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-yellow-500/30 transition-colors duration-300 hover:shadow-lg hover:shadow-yellow-500/10">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
                 <XCircle className="w-6 h-6 text-white" />
@@ -183,7 +239,7 @@ const ManagingOrders = () => {
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-green-500/30 transition-colors duration-300 hover:shadow-lg hover:shadow-green-500/10">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
                 <Check className="w-6 h-6 text-white" />
@@ -195,14 +251,14 @@ const ManagingOrders = () => {
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-red-500/30 transition-colors duration-300 hover:shadow-lg hover:shadow-red-500/10">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center">
                 <Trash2 className="w-6 h-6 text-white" />
               </div>
               <div>
                 <div className="text-2xl font-bold text-white">{stats.cenceled}</div>
-                <div className="text-sm text-gray-400">cenceled</div>
+                <div className="text-sm text-gray-400">Canceled</div>
               </div>
             </div>
           </div>
@@ -219,14 +275,14 @@ const ManagingOrders = () => {
                 placeholder="Search by title, author, customer, or transaction..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
             </div>
 
             {/* Filter Toggle Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200"
+              className="flex items-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:shadow-purple-500/20"
             >
               <Filter className="w-4 h-4" />
               <span>Filters</span>
@@ -244,7 +300,7 @@ const ManagingOrders = () => {
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   >
                     <option value="all" className="bg-gray-800">
                       All Status
@@ -256,7 +312,7 @@ const ManagingOrders = () => {
                       Accepted
                     </option>
                     <option value="cenceled" className="bg-gray-800">
-                      cenceled
+                      Canceled
                     </option>
                   </select>
                 </div>
@@ -267,7 +323,7 @@ const ManagingOrders = () => {
                   <select
                     value={priceSort}
                     onChange={(e) => setPriceSort(e.target.value)}
-                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   >
                     <option value="none" className="bg-gray-800">
                       No Sorting
@@ -385,7 +441,7 @@ const ManagingOrders = () => {
                             Accept
                           </button>
                           <button
-                            onClick={() => handleCencelOrder(item?._id)}
+                            onClick={() => handleCancelClick(item?._id, item?.product?.title)}
                             className="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-gradient-to-r from-red-500 to-pink-600 rounded-lg hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-red-500/25"
                           >
                             <XCircle className="w-3 h-3 mr-1" />
@@ -398,7 +454,7 @@ const ManagingOrders = () => {
                             {item?.orderStatus}
                           </span>
                           <button
-                            onClick={() => handleDeleteOrder(item?._id)}
+                            onClick={() => handleDeleteClick(item?._id, item?.product?.title)}
                             disabled={item.orderStatus === "accepted"}
                             className={`inline-flex items-center px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 transform shadow-lg ${
                               item.orderStatus === "accepted"
@@ -453,7 +509,7 @@ const ManagingOrders = () => {
       {selectedBuyer && (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setSelectedBuyer(null)}></div>
-          <div className="relative bg-gradient-to-br from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white rounded-2xl w-full max-w-md p-6 border border-white/20 shadow-2xl">
+          <div className="relative bg-gradient-to-br from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white rounded-2xl w-full max-w-md p-6 border border-white/20 shadow-2xl transform transition-all duration-300 scale-100">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                 Buyer Details
@@ -493,13 +549,99 @@ const ManagingOrders = () => {
             <div className="mt-6 flex justify-end">
               <button
                 onClick={() => setSelectedBuyer(null)}
-                className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200 transform hover:scale-105"
+                className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-purple-500/20"
               >
                 Close
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Cancel Confirmation Modal */}
+      {cancelConfirmation.show && (
+        <>
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300" />
+
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-white/10 backdrop-blur-xl border border-red-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl transform transition-all duration-300 scale-100">
+              {/* Icon */}
+              <div className="flex items-center justify-center w-16 h-16 bg-red-500/20 rounded-full mx-auto mb-4">
+                <AlertTriangle className="w-8 h-8 text-red-400" />
+              </div>
+
+              {/* Content */}
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-white mb-2">Cancel Order</h3>
+                <p className="text-gray-300 mb-6">
+                  Are you sure you want to cancel the order for{" "}
+                  <span className="font-semibold text-red-300">"{cancelConfirmation.title}"</span>? This action cannot be undone.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setcancelConfirmation({ show: false, orderId: "", title: "" })}
+                    className="flex-1 px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all duration-200 border border-white/20"
+                  >
+                    No, Keep Order
+                  </button>
+                  <button
+                    onClick={handleConfirmCancel}
+                    className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-red-500/25"
+                  >
+                    Yes, Cancel Order
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmation.show && (
+        <>
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300" />
+
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-white/10 backdrop-blur-xl border border-red-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl transform transition-all duration-300 scale-100">
+              {/* Icon */}
+              <div className="flex items-center justify-center w-16 h-16 bg-red-500/20 rounded-full mx-auto mb-4">
+                <Trash2 className="w-8 h-8 text-red-400" />
+              </div>
+
+              {/* Content */}
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-white mb-2">Delete Order</h3>
+                <p className="text-gray-300 mb-6">
+                  Are you sure you want to permanently delete the order for{" "}
+                  <span className="font-semibold text-red-300">"{deleteConfirmation.title}"</span>? This action cannot be undone.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setDeleteConfirmation({ show: false, orderId: "", title: "" })}
+                    className="flex-1 px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all duration-200 border border-white/20"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-red-500/25"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   )

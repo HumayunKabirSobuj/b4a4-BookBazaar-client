@@ -1,158 +1,324 @@
-import { motion } from "framer-motion";
-import { logout, useCurrentUser } from "../../../redux/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { useGetUserOrdersDataQuery } from "../../../redux/features/OrderManagement/orderApi";
-import { TOrder } from "../../../types/TOrder";
-import { ScaleLoader } from "react-spinners";
-import { useState } from "react";
-import { Pagination } from "../../../components/Shared/Pagination";
-const itemsPerPage = 7;
+
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
+import { logout, useCurrentUser } from "../../../redux/features/auth/authSlice"
+import { useGetUserOrdersDataQuery } from "../../../redux/features/OrderManagement/orderApi"
+import { ScaleLoader } from "react-spinners"
+import type { TOrder } from "../../../types/TOrder"
+import { toast } from "sonner"
+import { Pagination } from "../../../components/Shared/Pagination"
+
+const itemsPerPage = 7
 
 const UserDashboard = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const user = useAppSelector(useCurrentUser);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const user = useAppSelector(useCurrentUser)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
-    dispatch(logout());
-    toast.success("Logout Successfully");
-    navigate("/");
-  };
-
-  //   console.log(usersData);
+    dispatch(logout())
+    toast.success("Logout Successfully")
+    navigate("/")
+  }
 
   const { data, isLoading } = useGetUserOrdersDataQuery(user?.email, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
-    // pollingInterval: 30000,
-  });
+  })
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
         <ScaleLoader color="#1ca944" />
       </div>
-    );
+    )
   }
 
-  const orderData = data?.data;
+  const orderData = data?.data || []
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginatedOrders = orderData.slice(startIndex, startIndex + itemsPerPage)
+  const totalPages = Math.ceil(orderData.length / itemsPerPage)
 
-  const priceData = orderData?.map((item: TOrder) =>
-    Number(item?.product?.price)
-  );
-  // console.log(priceData);
-  const totalPrice =
-    priceData?.reduce((sum: number, price: number) => sum + price, 0) || 0;
-  //   console.log(totalPrice);
+  const priceData = orderData?.map((item: TOrder) => Number(item?.product?.price))
+  const totalPrice = priceData?.reduce((sum: number, price: number) => sum + price, 0) || 0
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedOrders = orderData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  // Calculate order statistics
+  const acceptedOrders = orderData?.filter((order: TOrder) => order.orderStatus === "accepted").length || 0
+  const pendingOrders = orderData?.filter((order: TOrder) => order.orderStatus === "pending").length || 0
 
-  // console.log(paginatedOrders);
-  const totalPages = Math.ceil(orderData.length / itemsPerPage);
+  const date = new Date()
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ]
+  const currentMonth = monthNames[date.getMonth()]
+  const currentYear = date.getFullYear()
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white ">
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* বাম দিক - ইউজার ইনফরমেশন */}
-          <motion.aside
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="md:col-span-1 bg-[#2B1E36] p-6 rounded-lg shadow-lg min-h-screen"
-          >
-            <div className="text-center">
-              <motion.img
-                whileHover={{ scale: 1.05 }}
-                src={user?.imageUrl}
-                alt="User"
-                className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-purple-400"
-              />
-              <h2 className="text-xl font-bold mb-2">{user?.name}</h2>
-              <p className="text-sm text-gray-400">{user?.email}</p>
-              <p className="text-sm text-gray-400">Role : {user?.role}</p>
+    <div className="min-h-screen bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] text-white">
+      <div className="container mx-auto p-4 lg:p-8">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold mb-2">My Dashboard</h1>
+              <p className="text-gray-400">Welcome back, {user?.name}</p>
             </div>
 
-            <div className="my-10 flex flex-col items-center justify-center gap-5">
+            {/* User Info & Actions */}
+            <div className="mt-4 lg:mt-0 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3">
+                <img
+                  src={user?.imageUrl || "/placeholder.svg?height=40&width=40"}
+                  alt={user?.name || "User"}
+                  className="w-10 h-10 rounded-full border-2 border-purple-400 object-cover"
+                />
+                <div>
+                  <p className="text-sm font-medium">{user?.name}</p>
+                  <p className="text-xs text-gray-400">{user?.role}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Link
+                  to="/"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all duration-200 text-sm font-medium"
+                >
+                  Home
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-gradient-to-r from-red-500/20 to-orange-500/20 hover:from-red-500/30 hover:to-orange-500/30 border border-red-500/30 rounded-lg transition-all duration-200 text-sm font-medium"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-gray-400 text-sm font-medium">Total Spent</h3>
+                <p className="text-2xl lg:text-3xl font-bold mt-2">৳{totalPrice.toLocaleString()}</p>
+                <div className="h-1 bg-gradient-to-r from-purple-500 to-blue-500 mt-3 rounded-full w-3/4"></div>
+              </div>
+              <div className="bg-purple-500/20 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-gray-400 text-sm font-medium">Total Orders</h3>
+                <p className="text-2xl lg:text-3xl font-bold mt-2">{orderData.length}</p>
+                <div className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500 mt-3 rounded-full w-1/2"></div>
+              </div>
+              <div className="bg-blue-500/20 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-gray-400 text-sm font-medium">Completed</h3>
+                <p className="text-2xl lg:text-3xl font-bold mt-2">{acceptedOrders}</p>
+                <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500 mt-3 rounded-full w-2/3"></div>
+              </div>
+              <div className="bg-green-500/20 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-gray-400 text-sm font-medium">Pending</h3>
+                <p className="text-2xl lg:text-3xl font-bold mt-2">{pendingOrders}</p>
+                <div className="h-1 bg-gradient-to-r from-amber-500 to-orange-500 mt-3 rounded-full w-1/4"></div>
+              </div>
+              <div className="bg-amber-500/20 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Orders Section */}
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-bold">My Orders</h2>
+              <p className="text-gray-400 text-sm mt-1">
+                {currentMonth} {currentYear} • {orderData.length} total orders
+              </p>
+            </div>
+
+            <div className="mt-4 sm:mt-0">
+              <div className="flex items-center gap-4 text-sm">
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                  <span className="text-gray-400">Completed: {acceptedOrders}</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-amber-500 rounded-full mr-2"></div>
+                  <span className="text-gray-400">Pending: {pendingOrders}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Orders Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left py-4 px-4 text-sm font-medium text-gray-400">Order ID</th>
+                  <th className="text-left py-4 px-4 text-sm font-medium text-gray-400">Book</th>
+                  <th className="text-left py-4 px-4 text-sm font-medium text-gray-400">Author</th>
+                  <th className="text-left py-4 px-4 text-sm font-medium text-gray-400">Price</th>
+                  <th className="text-left py-4 px-4 text-sm font-medium text-gray-400">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedOrders?.map((item: TOrder) => (
+                  <tr key={item._id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <td className="py-4 px-4">
+                      <span className="text-sm font-mono bg-white/10 px-2 py-1 rounded text-purple-300">
+                        {item._id.slice(0, 8)}...
+                      </span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={item.product?.imageUrl || "/placeholder.svg?height=40&width=40"}
+                          alt={item.product?.title}
+                          className="w-10 h-10 rounded-lg object-cover"
+                        />
+                        <div>
+                          <p className="text-sm font-medium text-white">{item.product?.title}</p>
+                          <p className="text-xs text-gray-400">{item.product?.category}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div>
+                        <p className="text-sm font-medium text-white">{item.product?.authorName}</p>
+                        <p className="text-xs text-gray-400">{item.product?.authorEmail}</p>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="text-sm font-bold text-green-400">৳{item.product?.price}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                          item.orderStatus === "accepted"
+                            ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                            : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                        }`}
+                      >
+                        <div
+                          className={`w-1.5 h-1.5 rounded-full mr-2 ${
+                            item.orderStatus === "accepted" ? "bg-green-400" : "bg-amber-400"
+                          }`}
+                        ></div>
+                        {item.orderStatus === "accepted" ? "Completed" : "Pending"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Empty State */}
+          {paginatedOrders.length === 0 && (
+            <div className="text-center py-12">
+              <svg
+                className="w-16 h-16 text-gray-500 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              <h3 className="text-lg font-medium text-gray-400 mb-2">No orders yet</h3>
+              <p className="text-gray-500 mb-4">Start shopping to see your orders here.</p>
               <Link
                 to="/"
-                className="w-[150px] text-center px-12 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200"
               >
-                <span className="text-white">Home</span>
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  />
+                </svg>
+                Start Shopping
               </Link>
-              <button
-                onClick={() => handleLogout()}
-                className="w-[150px] text-center px-12 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none"
-              >
-                <span className="text-white">Logout</span>
-              </button>
             </div>
-          </motion.aside>
+          )}
 
-          {/* ডান দিক - অর্ডার তথ্য */}
-          <motion.main
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:col-span-3 bg-[#2B1E36] p-6 rounded-lg shadow-lg min-h-screen"
-          >
-            <h1 className="text-2xl font-bold mb-6">Order Summary</h1>
-
-            {/* স্ট্যাটস কার্ড গ্রিড */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-[#3A2E42] p-4 rounded-lg"
-              >
-                <h3 className="text-gray-400">Total Spend</h3>
-                <p className="text-2xl font-bold">৳ {totalPrice}</p>
-                <div className="h-1 bg-purple-500 mt-2 rounded-full w-3/4" />
-              </motion.div>
-
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-[#3A2E42] p-4 rounded-lg"
-              >
-                <h3 className="text-gray-400">Active Orders</h3>
-                <p className="text-2xl font-bold">{orderData?.length}</p>
-                <div className="h-1 bg-green-500 mt-2 rounded-full w-1/2" />
-              </motion.div>
-            </div>
-
-            {/* সাম্প্রতিক অর্ডার টেবিল */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-[#3A2E42]">
-                  <tr>
-                    <th className="p-3 text-left">Transaction ID</th>
-                    <th className="p-3 text-left">Seller</th>
-                    <th className="p-3 text-left">Price</th>
-                    <th className="p-3 text-left">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedOrders.map((item: TOrder) => (
-                    <tr key={item._id}>
-                      <td className="p-3">{item?._id}</td>
-                      <td className="p-3">{item?.product?.authorName}</td>
-                      <td className="p-3">৳ {item?.product?.price}</td>
-                      <td className="p-3">
-                        <span className="px-2 py-1 rounded-full bg-green-500/20 text-green-400">
-                          {item?.orderStatus}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
             <div className="mt-8">
               <Pagination
                 currentPage={currentPage}
@@ -160,11 +326,11 @@ const UserDashboard = () => {
                 onPageChange={(page) => setCurrentPage(page)}
               />
             </div>
-          </motion.main>
+          )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UserDashboard;
+export default UserDashboard
