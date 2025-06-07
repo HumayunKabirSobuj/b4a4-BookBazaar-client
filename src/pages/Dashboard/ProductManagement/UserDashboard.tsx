@@ -1,12 +1,11 @@
 
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
-import { logout, useCurrentUser } from "../../../redux/features/auth/authSlice"
+import { Link, } from "react-router-dom"
+import { useAppSelector } from "../../../redux/hooks"
+import {  useCurrentUser } from "../../../redux/features/auth/authSlice"
 import { useGetUserOrdersDataQuery } from "../../../redux/features/OrderManagement/orderApi"
 import { ScaleLoader } from "react-spinners"
 import type { TOrder } from "../../../types/TOrder"
-import { toast } from "sonner"
 import { Pagination } from "../../../components/Shared/Pagination"
 
 const itemsPerPage = 7
@@ -15,14 +14,8 @@ const UserDashboard = () => {
   const [currentPage, setCurrentPage] = useState(1)
 
   const user = useAppSelector(useCurrentUser)
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
-  const handleLogout = () => {
-    dispatch(logout())
-    toast.success("Logout Successfully")
-    navigate("/")
-  }
+
 
   const { data, isLoading } = useGetUserOrdersDataQuery(user?.email, {
     refetchOnFocus: true,
@@ -79,35 +72,7 @@ const UserDashboard = () => {
               <p className="text-gray-400">Welcome back, {user?.name}</p>
             </div>
 
-            {/* User Info & Actions */}
-            <div className="mt-4 lg:mt-0 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3">
-                <img
-                  src={user?.imageUrl || "/placeholder.svg?height=40&width=40"}
-                  alt={user?.name || "User"}
-                  className="w-10 h-10 rounded-full border-2 border-purple-400 object-cover"
-                />
-                <div>
-                  <p className="text-sm font-medium">{user?.name}</p>
-                  <p className="text-xs text-gray-400">{user?.role}</p>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Link
-                  to="/"
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all duration-200 text-sm font-medium"
-                >
-                  Home
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-gradient-to-r from-red-500/20 to-orange-500/20 hover:from-red-500/30 hover:to-orange-500/30 border border-red-500/30 rounded-lg transition-all duration-200 text-sm font-medium"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
+           
           </div>
         </div>
 

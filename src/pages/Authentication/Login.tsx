@@ -84,7 +84,7 @@ const Login = () => {
   }
 
   return (
-    <div className="py-10 flex items-center justify-center bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] px-4">
+    <div className="py-10 flex items-center justify-center bg-gradient-to-b from-[#1B1B31] via-[#2B1E36] to-[#1B1B31] ">
       {/* Background Pattern */}
       
       
@@ -245,9 +245,7 @@ const Login = () => {
               </Link>
             </p>
 
-            {/* Decorative Elements */}
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-400/20 to-blue-400/20 rounded-full -translate-y-10 translate-x-10"></div>
-            <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-300/20 to-blue-300/20 rounded-full translate-y-8 -translate-x-8"></div>
+           
           </div>
         </div>
       </div>
