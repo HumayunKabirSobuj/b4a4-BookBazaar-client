@@ -264,17 +264,24 @@ const AdminDashboardLayout: React.FC = () => {
           label: "Dashboard",
           path: "/user/dashboard",
         },
-        {
-          key: "UserProfile",
-          icon: <FaUserCog />,
-          label: "Profile",
-          path: "/user/dashboard/profile",
-        },
+        
         {
           key: "view-order-history",
           icon: <FaMoneyCheckDollar />,
           label: "Order History",
           path: "/user/dashboard/view-order-history",
+        },
+        {
+          key: "Approved-orders",
+          icon: <FaMoneyCheckDollar />,
+          label: "Approved Orders",
+          path: "/user/dashboard/approved-orders",
+        },
+        {
+          key: "UserProfile",
+          icon: <FaUserCog />,
+          label: "Profile",
+          path: "/user/dashboard/profile",
         },
       ];
       break;
@@ -422,26 +429,7 @@ const AdminDashboardLayout: React.FC = () => {
             </div>
           </div>
 
-          {/* User Info */}
-          {(window.innerWidth < 1024 || !collapsed) && (
-            <div className="p-4 border-b border-gray-600/50">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {user?.name?.charAt(0) || "U"}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-white text-sm font-medium truncate">
-                    {user?.name || "User"}
-                  </span>
-                  <span className="text-gray-400 text-xs capitalize">
-                    {user?.role || "user"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
+      
 
           {/* Navigation Menu */}
           <nav className="flex-1 overflow-y-auto py-4 px-3">

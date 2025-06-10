@@ -21,6 +21,7 @@ import AdminProfile from "../pages/Dashboard/AdminProfile/AdminProfile";
 import UserProfile from "../pages/Dashboard/UserProfile/UserProfile";
 import ManageUsers from "../pages/UserManagement/ManageUsers";
 import Home from "../pages/Home";
+import ApprovedOrders from "../pages/Dashboard/ApprovedOrders";
 
 const router = createBrowserRouter([
   {
@@ -116,6 +117,10 @@ const router = createBrowserRouter([
       {
         path: "view-order-history",
         element: <ViewUserOrderHistory />,
+      },
+      {
+        path: "approved-orders",
+        element: <ApprovedOrders />,
       },
 
 
